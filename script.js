@@ -11,8 +11,8 @@
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
 */
-var gs=20;
-var gxs=30, gys=20;
+var gs=25;
+var gxs=60, gys=40;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
 var cx=0, cy=0;
