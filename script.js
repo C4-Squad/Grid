@@ -39,7 +39,7 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
+    ctx.drawImage("blue mine.svg",bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
@@ -120,56 +120,48 @@ function bSel() {
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx+1)*gs, (by-buld+distB(by))*gs, gs, (buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //top left
   }else if(bx <= m-1 && by <= m){
     clickedDir=2;
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx+1)*gs, (by-by)*gs, gs, (buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //top right
   }else if(bx >= gys-m-1 && by <= m){
     clickedDir=8
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx-1)*gs, (by-by)*gs, gs, (buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //bottom right
   }else if(bx >= gys-m-1 && by >= gys-m-1){
     clickedDir=6;
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx-1)*gs, (by-buld+distB(by))*gs, gs, (buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //right
   }else if(bx >= gxs-m-1) {
     clickedDir=7;
     ctx.fillStyle = "#00ffff";
     ctx.fillRect((bx-1)*gs, (by-m)*gs, gs,(buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //left
   }else if(bx <= m) {
     clickedDir=3;
     ctx.fillStyle = "#ffff00";
     ctx.fillRect((bx+1)*gs, (by-m)*gs, gs, (buld*gs));
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //up
   }else if(by <= 2) {
     clickedDir=1;
     ctx.fillStyle = "#00ff00";
     ctx.fillRect((bx-m)*gs, (by+1)*gs, (buld*gs), gs);
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   //down
   }else if(by >= 2) {
     clickedDir=5;
     ctx.fillStyle = "#0000ff";
     ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
   }
 }
 
