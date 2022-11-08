@@ -12,7 +12,7 @@
 11 small and large tank + stores fluids
 */
 var gs=25;
-var gxs=30, gys=20;
+var gxs=15, gys=10;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
 var cx=0, cy=0;
