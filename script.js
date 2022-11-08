@@ -39,7 +39,7 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    ctx.drawImage("https://github.com/C4-Squad/factory-game/blob/dba5ae8b29ff53adf2b74e0cb7eb35d226a78a07/mine.png",bx*gs, by*gs, gs, gs);
+    ctx.drawImage("/workspace/factory-game/mine.png",bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
