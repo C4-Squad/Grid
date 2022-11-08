@@ -11,9 +11,13 @@
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
 */
-var gs=25;
+//imgs
+img = new Image();
+img.src = "blue mine.svg";
+//imgs
+var gs=35;
 var gxs=30, gys=20;
-var ox=10, oy=115;
+var ox=9, oy=111;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
 var cx=0, cy=0;
@@ -40,8 +44,6 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    img = new Image();
-    img.src = "blue mine.svg";
     ctx.drawImage(img, bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
@@ -162,16 +164,16 @@ function bSel() {
   //down
   }else if(by >= 2) {
     clickedDir=5;
-    ctx.fillStyle = "#0000ff";
-    ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
     for(let i = buld; i !=0; i--) {
-      ctx.fillStyle = rgb(255,0,i*25);
-      document.getElementById("debug").innerHTML = String(rgb(255,0,i*25));
-      ctx.fillRect((bx-m)*gs, (by-1)*gs, (i*gs), gs);
+      var rgb = rgbToHex(i*25,i*25,i*25);
+      ctx.fillStyle = rgb;
+      document.getElementById("debug").innerHTML = "rgb: " + rgb;
+      ctx.fillRect((bx-m+i-1)*gs, (by-1)*gs, gs, gs);
+      ctx.drawImage(img,(bx-m+i-1)*gs, (by-1)*gs, gs, gs)
     }
   }
 }
 
-function selectg(){
-  console.log("nan")
+function rgbToHex(r, g, b) {
+  return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
