@@ -13,7 +13,7 @@
 */
 var gs=25;
 var gxs=30, gys=20;
-var ox=10, oy=120;
+var ox=10, oy=115;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
 var cx=0, cy=0;
