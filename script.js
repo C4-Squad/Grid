@@ -40,7 +40,7 @@ function mm(e) {
     drawGrid();
     ctx.fillStyle = "#ff0000";
     img = new Image();
-    img.src = "mine.svg";
+    img.src = "blue mine.svg";
     ctx.drawImage(img, bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
