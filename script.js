@@ -39,7 +39,7 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    ctx.drawImage("/workspace/factory-game/mine.png",bx*gs, by*gs, gs, gs);
+    ctx.fillRect(bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
