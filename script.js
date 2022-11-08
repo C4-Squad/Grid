@@ -13,6 +13,7 @@
 */
 var gs=25;
 var gxs=30, gys=20;
+var ox=10, oy=110;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
 var cx=0, cy=0;
@@ -30,7 +31,7 @@ canvas.onclick = function(event) {mc(event)};
 var timeout;
 function mm(e) {
   var x = e.clientX, y = e.clientY;
-  bx = Math.floor((x-10)/gs), by = Math.floor((y-80)/gs);
+  bx = Math.floor((x-ox)/gs), by = Math.floor((y-oy)/gs);
   var cor = "Coordinates: (" + x + "," + y + ")";
   document.getElementById("cor").innerHTML = cor;
   var bcor = "Box Coordinates: (" + bx + "," + by + ")";
