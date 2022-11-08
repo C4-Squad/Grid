@@ -164,7 +164,7 @@ function bSel() {
     ctx.fillStyle = "#0000ff";
     ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
     for(i = buld; i !=0; i--) {
-      ctx.fillStyle = "#ff00"+(i*2);
+      ctx.fillStyle = rgb(255,0,i*25);
       ctx.fillRect((bx-m)*gs, (by-1)*gs, (i*gs), gs);
     }
   }
