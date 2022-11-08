@@ -171,5 +171,5 @@ function bSel() {
 }
 
 function selectg(){
-  
+  console.log("nan")
 }
