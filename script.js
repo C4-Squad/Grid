@@ -163,8 +163,8 @@ function bSel() {
     clickedDir=5;
     ctx.fillStyle = "#0000ff";
     ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
-    ctx.fillStyle = "#ff0000";
     for(i = buld; i !=0; i--) {
+      ctx.fillStyle = "#ff00"+(i*2);
       ctx.fillRect((bx-m)*gs, (by-1)*gs, (i*gs), gs);
     }
   }
