@@ -30,7 +30,7 @@ canvas.onclick = function(event) {mc(event)};
 var timeout;
 function mm(e) {
   var x = e.clientX, y = e.clientY;
-  bx = Math.floor((x-10)/gs), by = Math.floor((y-70)/gs);
+  bx = Math.floor((x-10)/gs), by = Math.floor((y-80)/gs);
   var cor = "Coordinates: (" + x + "," + y + ")";
   document.getElementById("cor").innerHTML = cor;
   var bcor = "Box Coordinates: (" + bx + "," + by + ")";
