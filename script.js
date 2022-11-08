@@ -39,7 +39,9 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    ctx.fillRect(bx*gs, by*gs, gs, gs);
+    img = new Image();
+    img.src = "mine.svg";
+    ctx.drawImage(img, bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
