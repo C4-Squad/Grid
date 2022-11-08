@@ -163,9 +163,9 @@ function bSel() {
     clickedDir=5;
     ctx.fillStyle = "#0000ff";
     ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
-    for(i = buld; i !=0; i--) {
+    for(let i = buld; i !=0; i--) {
       ctx.fillStyle = rgb(255,0,i*25);
-      console.log(rgb(255,0,i*25));
+      document.getElementById("debug").innerHTML = rgb(255,0,i*25);
       ctx.fillRect((bx-m)*gs, (by-1)*gs, (i*gs), gs);
     }
   }
