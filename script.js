@@ -39,10 +39,7 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    svg_data = "blue mine.svg";
-    img = new Image();
-    img.src = "data:image/svg+xml," + encodeURIComponent(svg_data);
-    ctx.drawImage("img",bx*gs, by*gs, gs, gs);
+    ctx.drawImage("mine.png",bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
