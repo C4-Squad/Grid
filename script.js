@@ -162,7 +162,10 @@ function bSel() {
   }else if(by >= 2) {
     clickedDir=5;
     ctx.fillStyle = "#0000ff";
-    ctx.fillRect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
+    ctx.rect((bx-m)*gs, (by-1)*gs, (buld*gs), gs);
+    for(i = buld; i !=0; i--) {
+      ctx.rect((bx-m-i)*gs, (by-1)*gs, (i*gs), gs);
+    }
     ctx.fillStyle = "#ff0000";
   }
 }
