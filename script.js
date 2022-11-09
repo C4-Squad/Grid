@@ -12,10 +12,9 @@
 11 small and large tank + stores fluids
 */
 //imgs
-img = new Image();
-img.src = "blue mine.svg";
+img = new Image().src = "assets/red mine dc.svg";
 //imgs
-var gs=35;
+var gs=25;
 var gxs=30, gys=20;
 var ox=9, oy=111;
 var cxs=gxs*gs, cys=gys*gs;
@@ -25,6 +24,10 @@ var clicked=false;
 var clickedon=0;//1-blank 2-building 3-select
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var buildingsUnlocked = ["conveyor","mine","smelter","fabricator","small storage"];
+var buildingsColored = [["",""],["",""],[],[]];//1-blue 2-red 3-yellow 4-purple | first is dc second is c
+var buildingsConnectedImgs = [];//mine and pump are blank
+var buildingsDisconnectedImgs = [];//mine and pump are blank
+var buildings = ["conveyor","pipe","mine","smelter","fabricator","pump","filter","mixer","small storage","large storage","small tank","large tank"];
 var canvas = document.createElement("CANVAS");
 var ctx = canvas.getContext("2d");
 canvas.width=cxs, canvas.height=cys;
