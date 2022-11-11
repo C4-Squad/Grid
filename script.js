@@ -59,12 +59,11 @@ function start() {
   buildingsColored[3][3].src = "assets/grey pump dc.svg";
   buildingsColored[4][4] = new Image();
   buildingsColored[4][4].src = "assets/grey pump.svg";
-
   for (let i = 0; i != buildingsUnlocked.length; i++) {
     let curBuld = buildingsUnlocked[i];
-    if(curBuld=="mine") {
+    if(curBuld.equals("mine")) {
       buildingsUnlocked[i] = buildingsColored[3][0];
-    }else if(curBuld=="pump") {
+    }else if(curBuld.equals("pump")) {
       buildingsUnlocked[i] = buildingsColored[3][3];
     }
   }
@@ -79,6 +78,7 @@ function mm(e) {
   document.getElementById("cor").innerHTML = cor;
   var bcor = "Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("bcor").innerHTML = bcor;
+  document.getElementById("debug").innerHTML = "buildings: " + buildingsUnlocked;
   if(clicked == false) {
     clear();
     drawGrid();
