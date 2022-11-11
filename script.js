@@ -11,9 +11,6 @@
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
 */
-//imgs
-img = new Image().src = "assets/red mine dc.svg";
-//imgs
 var gs=25;
 var gxs=30, gys=20;
 var ox=9, oy=111;
@@ -24,7 +21,7 @@ var clicked=false;
 var clickedon=0;//1-blank 2-building 3-select
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var buildingsUnlocked = ["conveyor","mine","smelter","fabricator","small storage"];
-var buildingsColored = [["",""],["",""],[],[]];//1-blue 2-red 3-yellow 4-purple | first is dc second is c
+var buildingsColored = [[],[],[],[]];//1-blue 2-red 3-yellow 4-purple | first is dc second is c
 var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
 var buildings = ["conveyor","pipe","mine","smelter","fabricator","pump","filter","mixer","small storage","large storage","small tank","large tank"];
@@ -36,6 +33,14 @@ canvas.style="border:1px solid #ff0000;";
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 var timeout;
+
+function start() {
+  buildingsColored[0][0] = new Image();
+  buildingsColored[0][0].src("assets/blue mine dc.svg");
+}
+
+start();
+
 function mm(e) {
   var x = e.clientX, y = e.clientY;
   bx = Math.floor((x-ox)/gs), by = Math.floor((y-oy)/gs);
@@ -47,7 +52,7 @@ function mm(e) {
     clear();
     drawGrid();
     ctx.fillStyle = "#ff0000";
-    ctx.drawImage(img, bx*gs, by*gs, gs, gs);
+    ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
@@ -170,9 +175,9 @@ function bSel() {
     for(let i = buld; i !=0; i--) {
       var rgb = rgbToHex(i*25,i*25,i*25);
       ctx.fillStyle = rgb;
-      document.getElementById("debug").innerHTML = "rgb: " + rgb;
+      document.getElementById("debug").innerHTML = "hex: " + rgb;
       ctx.fillRect((bx-m+i-1)*gs, (by-1)*gs, gs, gs);
-      ctx.drawImage(img,(bx-m+i-1)*gs, (by-1)*gs, gs, gs)
+      ctx.drawImage(buildingsColored[0][0],(bx-m+i-1)*gs, (by-1)*gs, gs, gs)
     }
   }
 }
