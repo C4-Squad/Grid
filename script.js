@@ -11,8 +11,8 @@
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
 */
-var gs=50;
-var gxs=15, gys=10;
+var gs=25;
+var gxs=30, gys=20;
 var ox=9, oy=111;
 var cxs=gxs*gs, cys=gys*gs;
 var bx=0, by=0;
@@ -21,6 +21,7 @@ var clicked=false;
 var clickedon=0;//1-blank 2-building 3-select
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var buildingsUnlocked = ["mine","pump"];
+var buildingsUnlockedImgs = [];
 var buildingsColored = [[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey| 1-mine dc 2-mine c 3-pump dc 4-pump dc
 var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
@@ -51,26 +52,28 @@ function setImgs() {
   buildingsColored[3][0].src = "assets/purple mine dc.svg";
   buildingsColored[3][1] = new Image();
   buildingsColored[3][1].src = "assets/purple mine.svg";
-  buildingsColored[3][0] = new Image();
-  buildingsColored[3][0].src = "assets/grey mine dc.svg";
+  buildingsColored[4][0] = new Image();
+  buildingsColored[4][0].src = "assets/grey mine dc.svg";
   buildingsColored[4][1] = new Image();
   buildingsColored[4][1].src = "assets/grey mine.svg";
-  buildingsColored[3][3] = new Image();
-  buildingsColored[3][3].src = "assets/grey pump dc.svg";
-  buildingsColored[4][4] = new Image();
-  buildingsColored[4][4].src = "assets/grey pump.svg";
-  for (var i = 0; i != buildingsUnlocked.length; i++) {
+  buildingsColored[4][2] = new Image();
+  buildingsColored[4][2].src = "assets/grey pump dc.svg";
+  buildingsColored[4][3] = new Image();
+  buildingsColored[4][3].src = "assets/grey pump.svg";
+  /*for (var i = buildingsUnlocked.length; i > 0; i--) {
     var curBuld = buildingsUnlocked[i];
     if(curBuld.equals("mine")) {
       document.getElementById("debug").innerHTML = "buildings:";
-      buildingsUnlocked[i] = buildingsColored[3][0];
+      buildingsUnlockedImgs[i] = new Image();
+      buildingsUnlockedImgs[i] = buildingsColored[3][0].src;
     }else if(curBuld.equals("pump")) {
       document.getElementById("debug").innerHTML = "buildings:";
-      buildingsUnlocked[i] = buildingsColored[3][3];
+      buildingsUnlockedImgs[i] = new Image();
+      buildingsUnlockedImgs[i] = buildingsColored[3][2].src;
+    }else {
+      document.getElementById("debug").innerHTML = "buildings: " + curBuld;
     }
-    document.getElementById("debug").innerHTML = "i:"+i;
-  }
-  document.getElementById("debug").innerHTML = "curbuild:"+curBuld;
+  }*/
 }
 
 setImgs();
@@ -82,7 +85,6 @@ function mm(e) {
   document.getElementById("cor").innerHTML = cor;
   var bcor = "Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("bcor").innerHTML = bcor;
-  setImgs();
   if(clicked == false) {
     clear();
     drawGrid();
@@ -137,13 +139,13 @@ function clear() {
 }
 
 function drawGrid(){
-  for (let i=1; i<gxs; i++) {
-    ctx.moveTo(i*gs, 0);
-    ctx.lineTo(i*gs, cys);
+  for (let xx=1; xx<gxs; xx++) {
+    ctx.moveTo(xx*gs, 0);
+    ctx.lineTo(xx*gs, cys);
   }
-  for (let j=1; j<gys; j++) {
-    ctx.moveTo(0, j*gs);
-    ctx.lineTo(cxs, j*gs);
+  for (let yy=1; yy<gys; yy++) {
+    ctx.moveTo(0, yy*gs);
+    ctx.lineTo(cxs, yy*gs);
   }
   ctx.stroke();
 }
@@ -212,7 +214,7 @@ function bSel() {
       ctx.fillStyle = rgb;
       document.getElementById("debug").innerHTML = "hex: " + rgb;
       ctx.fillRect((bx-m+j-1)*gs, (by-1)*gs, gs, gs);
-      ctx.drawImage(buildingsUnlocked[j],(bx-m+j-1)*gs, (by-1)*gs, gs, gs)
+      ctx.drawImage(buildingsUnlockedImgs[j],(bx-m+j-1)*gs, (by-1)*gs, gs, gs)
     }
   }
 }
