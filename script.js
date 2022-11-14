@@ -34,7 +34,7 @@ canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 var timeout;
 
-function start() {
+function setImgs() {
   buildingsColored[0][0] = new Image();
   buildingsColored[0][0].src = "assets/blue mine dc.svg";
   buildingsColored[0][1] = new Image();
@@ -59,17 +59,21 @@ function start() {
   buildingsColored[3][3].src = "assets/grey pump dc.svg";
   buildingsColored[4][4] = new Image();
   buildingsColored[4][4].src = "assets/grey pump.svg";
-  for (let i = 0; i != buildingsUnlocked.length; i++) {
-    let curBuld = buildingsUnlocked[i];
+  for (var i = 0; i != buildingsUnlocked.length; i++) {
+    var curBuld = buildingsUnlocked[i];
     if(curBuld.equals("mine")) {
+      document.getElementById("debug").innerHTML = "buildings:";
       buildingsUnlocked[i] = buildingsColored[3][0];
     }else if(curBuld.equals("pump")) {
+      document.getElementById("debug").innerHTML = "buildings:";
       buildingsUnlocked[i] = buildingsColored[3][3];
     }
+    document.getElementById("debug").innerHTML = "i:"+i;
   }
+  document.getElementById("debug").innerHTML = "curbuild:"+curBuld;
 }
 
-start();
+setImgs();
 
 function mm(e) {
   var x = e.clientX, y = e.clientY;
@@ -78,7 +82,7 @@ function mm(e) {
   document.getElementById("cor").innerHTML = cor;
   var bcor = "Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("bcor").innerHTML = bcor;
-  document.getElementById("debug").innerHTML = "buildings: " + buildingsUnlocked;
+  setImgs();
   if(clicked == false) {
     clear();
     drawGrid();
