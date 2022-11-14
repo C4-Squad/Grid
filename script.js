@@ -11,6 +11,8 @@
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
 */
+var img = new Image();
+img.src = "assets/grey pump dc.svg";
 var gs=25;
 var gxs=30, gys=20;
 var ox=9, oy=111;
@@ -88,8 +90,7 @@ function mm(e) {
   if(clicked == false) {
     clear();
     drawGrid();
-    ctx.fillStyle = "#ff0000";
-    ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
+    ctx.drawImage(img, bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
@@ -139,6 +140,7 @@ function clear() {
 }
 
 function drawGrid(){
+  ctx.fillStyle = "#ffffff";
   for (let xx=1; xx<gxs; xx++) {
     ctx.moveTo(xx*gs, 0);
     ctx.lineTo(xx*gs, cys);
