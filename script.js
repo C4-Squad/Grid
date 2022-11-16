@@ -169,8 +169,10 @@ function mm(e) {
     }else if(clickedDir==5) {
       for(let j = buld; j != 0; j--) {
         if(ocx >= selBounds[j-1][0] && ocx <= selBounds[j-1][1] && ocy >= selBounds[j-1][2] && ocy <= selBounds[j-1][3]) {
-          ctx.fillRect(selBounds[0], selBounds[2], gs, gs);
-          hoveredBuld="mine";
+          ctx.fillStyle = "#ffff00";
+          ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
+          document.getElementById("debug").innerHTML = "x: " + selBounds[j-1][0] + " y: " + selBounds[j-1][2];
+          hoveredBuld=buildingsUnlocked[j-1];
           break;
         }else{
           hoveredBuld="";
@@ -285,44 +287,35 @@ function bSel() {
     clickedDir=2;
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx+1)*gs, (by-by)*gs, gs, (buld*gs));
-    ctx.fillStyle = "#ff0000";
   //top right
   }else if(bx >= gys-m-1 && by <= m){
     clickedDir=8
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx-1)*gs, (by-by)*gs, gs, (buld*gs));
-    ctx.fillStyle = "#ff0000";
   //bottom right
   }else if(bx >= gys-m-1 && by >= gys-m-1){
     clickedDir=6;
     ctx.fillStyle = "#000000";
     ctx.fillRect((bx-1)*gs, (by-buld+distB(by))*gs, gs, (buld*gs));
-    ctx.fillStyle = "#ff0000";
   //right
   }else if(bx >= gxs-m-1) {
     clickedDir=7;
     ctx.fillStyle = "#00ffff";
     ctx.fillRect((bx-1)*gs, (by-m)*gs, gs,(buld*gs));
-    ctx.fillStyle = "#ff0000";
   //left
   }else if(bx <= m) {
     clickedDir=3;
     ctx.fillStyle = "#ffff00";
     ctx.fillRect((bx+1)*gs, (by-m)*gs, gs, (buld*gs));
-    ctx.fillStyle = "#ff0000";
   //up
   }else if(by <= 2) {
     clickedDir=1;
     ctx.fillStyle = "#00ff00";
     ctx.fillRect((bx-m)*gs, (by+1)*gs, (buld*gs), gs);
-    ctx.fillStyle = "#ff0000";
   //down
   }else if(by >= 2) {
     clickedDir=5;
     for(let j = buld; j != 0; j--) {
-      var rgb = rgbToHex(j*25,j*25,j*25);
-      ctx.fillStyle = rgb;
-      ctx.fillRect((bx-m+j-1)*gs, (by-1)*gs, gs, gs);
       ctx.drawImage(buildingsUnlockedImgs[j-1],(bx-m+j-1)*gs, (by-1)*gs, gs, gs);
       selBounds[j-1][0] = (bx-m+j-1)*gs; // x1
       selBounds[j-1][1] = ((bx-m+j-1)*gs)+gs; // x2
