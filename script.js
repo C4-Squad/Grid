@@ -62,6 +62,7 @@ function Pump() {
   }
 }
 //vars
+var money=100;
 var gs=50;
 var gxs=20, gys=10;
 var ox=10, oy=120;
@@ -72,7 +73,8 @@ var bx=0, by=0;
 var cx=0, cy=0;
 var clicked=false;
 var hoveredBuld="";
-var clickedon=0;//1-blank 2-building 3-select
+var clickedBuld=false;
+var curBuld=0;
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var buildingsUnlocked = ["mine","pump"];
 var buildingsUnlockedImgs = [new Image(), new Image()];
@@ -135,11 +137,12 @@ function mm(e) {
   ocx = x-ox, ocy = y-oy;
   var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("cor").innerHTML = cor;
-  document.getElementById("bcor").innerHTML = placedObjects.length;
+  document.getElementById("money").innerHTML = "money:$" + money;
   if(clicked == false) {
     clear();
     drawGrid();
     ctx.drawImage(buildingsColored[4][0], bx*gs, by*gs, gs, gs);
+    clickedBuld = checkSpace();
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
@@ -189,6 +192,12 @@ function mc(e) {
     clicked=true;
     cx=bx, cy=by;
     bSel();
+  } else if (clicked == false && clickedBuld == true) {
+    var curTier=placedObjects[curBuld].tier;
+    if(money >= Math.pow((curTier*2),1.5) && curTier <= 5){
+      placedObjects[curBuld].tier = curTier + 1;
+      money = money - Math.pow((curTier*2),1.5);
+    }
   } else if (clicked == true && hoveredBuld != "") {
     let len = placedObjects.length;
     placedObjects[len] = new Mine();
@@ -203,8 +212,25 @@ function mc(e) {
   }
 }
 
+function checkSpace(x,y) {
+  for(i = placedObjects.length; i != 0; i--) {
+    if(x == placedObjects[i-1].xLoc && y == placedObjects[i-1].yLoc) {
+      curBuld=i-1;
+      return true;
+    }else{
+      curBuld=0;
+      return false;
+    }
+  }
+}
+
 function clear() {
   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  placedObjects.forEach(updateObjs);
+}
+
+function updateObjs(item) {
+  item.update();
 }
 
 function drawGrid(){
