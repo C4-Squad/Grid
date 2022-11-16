@@ -84,7 +84,7 @@ var buildingsDisconnectedImgs = [];//mine and pump are blank
 var buildings = ["conveyor","pipe","mine","smelter","fabricator","pump","filter","mixer","small storage","large storage","small tank","large tank"];
 var placedObjects = [];
 var selBounds = [[],[],[]];
-var canvas = document.createElement("CANVAS");
+var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width=cxs, canvas.height=cys;
 document.body.appendChild(this.canvas);
@@ -92,6 +92,12 @@ canvas.style="border:1px solid #ff0000;";
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 var timeout;
+
+function sleep(ms) {
+  return new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
+}
 
 function setImgs() {
   buildingsColored[0][0] = new Image();
@@ -140,9 +146,8 @@ function mm(e) {
   document.getElementById("money").innerHTML = "money:$" + money;
   if(clicked == false) {
     clear();
-    drawGrid();
-    ctx.drawImage(buildingsColored[4][0], bx*gs, by*gs, gs, gs);
-    clickedBuld = checkSpace();
+    drawGrid(bx,by);
+    ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
@@ -184,13 +189,14 @@ function mm(e) {
   }
 }
 
-function mc(e) {
+function mc() {
   clear();
-  drawGrid();
+  clickedBuld = checkSpace();
   if (clicked == false) {
     hoveredBuld="";
     clicked=true;
     cx=bx, cy=by;
+    drawGrid(cx,cy);
     bSel();
   } else if (clicked == false && clickedBuld == true) {
     var curTier=placedObjects[curBuld].tier;
@@ -198,17 +204,23 @@ function mc(e) {
       placedObjects[curBuld].tier = curTier + 1;
       money = money - Math.pow((curTier*2),1.5);
     }
+    drawGrid(cx,cy);
   } else if (clicked == true && hoveredBuld != "") {
     let len = placedObjects.length;
-    placedObjects[len] = new Mine();
+    if(hoveredBuld=="mine") {
+      placedObjects[len] = new Mine();
+    }else if(hoveredBuld=="pump"){
+      placedObjects[len] = new Pump();
+    }
     placedObjects[len].xLoc = cx;
     placedObjects[len].yLoc = cy;
     placedObjects[len].imgUp();
     placedObjects[len].update();
+    drawGrid(cx,cy);
   } else if (clicked == true) {
     clicked = false;
     clear();
-    drawGrid();
+    drawGrid(cx,cy);
   }
 }
 
@@ -225,24 +237,26 @@ function checkSpace(x,y) {
 }
 
 function clear() {
-  ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  placedObjects.forEach(updateObjs);
+  ctx.clearRect(0, 0, gxs*gs, gys*gs);
+  if(placedObjects.length != 0) {
+    placedObjects.forEach(updateObjs);
+  }
 }
 
 function updateObjs(item) {
   item.update();
 }
 
-function drawGrid(){
+function drawGrid(x,y){
   ctx.fillStyle = "#ffffff";
-  for (let xx=1; xx<gxs; xx++) {
-    ctx.moveTo(xx*gs, 0);
-    ctx.lineTo(xx*gs, cys);
-  }
-  for (let yy=1; yy<gys; yy++) {
-    ctx.moveTo(0, yy*gs);
-    ctx.lineTo(cxs, yy*gs);
-  }
+  ctx.moveTo((x)*gs, (y-0.5)*gs);
+  ctx.lineTo((x)*gs, (y+1.5)*gs);
+  ctx.moveTo((x+1)*gs, (y-0.5)*gs);
+  ctx.lineTo((x+1)*gs, (y+1.5)*gs);
+  ctx.moveTo((x-0.5)*gs, y*gs);
+  ctx.lineTo((x+1.5)*gs, y*gs);
+  ctx.moveTo((x-0.5)*gs, (y+1)*gs);
+  ctx.lineTo((x+1.5)*gs, (y+1)*gs);
   ctx.stroke();
 }
 
