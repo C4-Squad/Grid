@@ -10,24 +10,76 @@
 9 constructor + make products with fluids and solids
 10 small and large storage + stores resorces
 11 small and large tank + stores fluids
+5 tiers
 */
-var img = new Image();
-img.src = "assets/grey pump dc.svg";
-var gs=25;
+//buildings
+const mine = {
+  color: "grey",
+  imgdc: "assets/grey mine dc.svg",
+  imgc: "assets/grey mine.svg",
+  img: new Image(),
+  connected: false,
+  xLoc: 0,
+  yLoc: 0,
+  tier: 1,
+  colorUp: function() {
+    this.imgdc = "assets/" + this.color + " mine dc.svg";
+    this.imgdc = "assets/" + this.color + " mine.svg";
+  },
+  imgUp: function(){
+    if(this.connected) {
+      this.img.src = this.imgc;
+    }else{
+      this.img.src = this.imgdc;
+    }
+  },
+  update: function() {
+    ctx.drawImage(this.img, this.xLoc*gs, this.yLoc*gs, gs, gs);
+  }
+}
+const pump = {
+  color: "grey",
+  imgdc: "assets/grey pump dc.svg",
+  imgc: "assets/grey pump.svg",
+  img: new Image(),
+  connected: false,
+  xLoc: 0,
+  yLoc: 0,
+  tier: 1,
+  colorUp: function() {
+    this.imgdc = "assets/" + this.color + " pump dc.svg";
+    this.imgdc = "assets/" + this.color + " pump.svg";
+  },
+  imgUp: function(){
+    if(this.connected) {
+      this.img.src = this.imgc;
+    }else{
+      this.img.src = this.imgdc;
+    }
+  },
+  update: function() {
+    ctx.drawImage(this.img, this.xLoc*gs, this.yLoc*gs, gs, gs);
+  }
+}
+//vars
+var gs=35;
 var gxs=30, gys=20;
 var ox=9, oy=111;
 var cxs=gxs*gs, cys=gys*gs;
+var sel = 0;//0 if far left or bottom
 var bx=0, by=0;
 var cx=0, cy=0;
 var clicked=false;
 var clickedon=0;//1-blank 2-building 3-select
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var buildingsUnlocked = ["mine","pump"];
-var buildingsUnlockedImgs = [];
-var buildingsColored = [[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey| 1-mine dc 2-mine c 3-pump dc 4-pump dc
+var buildingsUnlockedImgs = [new Image(), new Image()];
+var buildingsColored = [[],[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey| 1-mine dc 2-mine c 3-pump dc 4-pump dc
 var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
 var buildings = ["conveyor","pipe","mine","smelter","fabricator","pump","filter","mixer","small storage","large storage","small tank","large tank"];
+var placedObjects = [];
+var selBounds = [];
 var canvas = document.createElement("CANVAS");
 var ctx = canvas.getContext("2d");
 canvas.width=cxs, canvas.height=cys;
@@ -62,23 +114,19 @@ function setImgs() {
   buildingsColored[4][2].src = "assets/grey pump dc.svg";
   buildingsColored[4][3] = new Image();
   buildingsColored[4][3].src = "assets/grey pump.svg";
-  /*for (var i = buildingsUnlocked.length; i > 0; i--) {
-    var curBuld = buildingsUnlocked[i];
-    if(curBuld.equals("mine")) {
-      document.getElementById("debug").innerHTML = "buildings:";
-      buildingsUnlockedImgs[i] = new Image();
-      buildingsUnlockedImgs[i] = buildingsColored[3][0].src;
-    }else if(curBuld.equals("pump")) {
-      document.getElementById("debug").innerHTML = "buildings:";
-      buildingsUnlockedImgs[i] = new Image();
-      buildingsUnlockedImgs[i] = buildingsColored[3][2].src;
-    }else {
-      document.getElementById("debug").innerHTML = "buildings: " + curBuld;
-    }
-  }*/
+}
+
+function imgs(item, index) {
+  if(item == "mine") {
+    buildingsUnlockedImgs[index].src = "assets/grey mine dc.svg";
+  }else if(item == "pump") {
+    buildingsUnlockedImgs[index].src = "assets/grey pump dc.svg";
+  }else {
+  }
 }
 
 setImgs();
+buildingsUnlocked.forEach(imgs);
 
 function mm(e) {
   var x = e.clientX, y = e.clientY;
@@ -90,14 +138,14 @@ function mm(e) {
   if(clicked == false) {
     clear();
     drawGrid();
-    ctx.drawImage(img, bx*gs, by*gs, gs, gs);
+    ctx.drawImage(buildingsColored[4][0], bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true) {
     var buld = buildingsUnlocked.length;
     var m = ((buld - 1)/2);
     if(buld % 2 == 0){
-      m = 0.5 + ((buld)/2)
+      m = 0.5 + ((buld)/2);
     }
     if(clickedDir==1) {
       //        right            left              down            up
@@ -119,6 +167,12 @@ function mm(e) {
       if(bx > (cx + 1) || bx < (cx - 2) || by > (cy + m + 1) || by < (cy - m - 1)) {
         clicked = false;
       }
+    }else if(clickedDir==4) {
+      for(var i = selBounds.length(); i != 0; i--) {
+        if(x <= selBounds[i-1][0] && x >= selBounds[i-1][1] && y <= selBounds[i-1][2] && y >= selBounds[i-1][3]) {
+          ctx.fillRect((bx-m+j-1)*gs, (by-1)*gs, gs, gs);
+        }
+      }
     }
   }
 }
@@ -126,7 +180,7 @@ function mc(e) {
   clear();
   drawGrid();
   if (clicked == false) {
-    clicked=true
+    clicked=true;
     cx=bx, cy=by;
     bSel();
   } else if (clicked == true) {
@@ -135,6 +189,7 @@ function mc(e) {
     drawGrid();
   }
 }
+
 function clear() {
   ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 }
@@ -164,7 +219,7 @@ function bSel() {
   var buld = buildingsUnlocked.length;
   var m = ((buld - 1)/2);
   if(buld % 2 == 0){
-    m = -0.5 + ((buld)/2)
+    m = -0.5 + ((buld)/2);
   }
   //bottom left
   if(bx <= m-1 && by >= gys-m-1){
@@ -216,7 +271,7 @@ function bSel() {
       ctx.fillStyle = rgb;
       document.getElementById("debug").innerHTML = "hex: " + rgb;
       ctx.fillRect((bx-m+j-1)*gs, (by-1)*gs, gs, gs);
-      ctx.drawImage(buildingsUnlockedImgs[j],(bx-m+j-1)*gs, (by-1)*gs, gs, gs)
+      ctx.drawImage(buildingsUnlockedImgs[j-1],(bx-m+j-1)*gs, (by-1)*gs, gs, gs);
     }
   }
 }
