@@ -148,7 +148,7 @@ function mm(e) {
   var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("cor").innerHTML = cor;
   document.getElementById("money").innerHTML = "money:$" + money;
-  document.getElementById("debug").innerHTML = "hovering: " + checkSpace(bx,by) + " bulds: " + placedObjects.length + " X: " + placedObjectsX[0] + " Y: " + placedObjectsY[0];
+  document.getElementById("debug").innerHTML = "hovering: " + checkSpace(bx,by,false) + " bulds: " + checkSpace(bx,by,true) + " X: " + placedObjectsX[0] + " Y: " + placedObjectsY[0];
   if(clicked == false) {
     clear();
     ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
@@ -174,7 +174,7 @@ function mm(e) {
       for(let j = buld; j != 0; j--) {
         if(ocx >= selBounds[j-1][0] && ocx <= selBounds[j-1][1] && ocy >= selBounds[j-1][2] && ocy <= selBounds[j-1][3]) {
           ctx.fillStyle = "#ffff00";
-          if(checkSpace(cx,cy) == false) {
+          if(checkSpace(cx,cy,false) == false) {
             ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
             hoveredBuld=buildingsUnlocked[j-1];
             break;
@@ -203,7 +203,7 @@ function mc() {
     clicked=true;
     cx=bx, cy=by;
     bSel();
-  } else if (clicked == false && checkSpace(cx,cy) == true) {
+  } else if (clicked == false && checkSpace(cx,cy,false) == true) {
     var curTier=placedObjects[curBuld].tier;
     if(money >= 10 && curTier <= 5){
       placedObjects[curBuld].tier = curTier + 1;
@@ -227,18 +227,26 @@ function mc() {
   }
 }
 
-function checkSpace(inX,inY) {
+function checkSpace(inX,inY,name) {
+  var rBool = false;
+  var rName = "";
   if(placedObjects.length == 0){
-    return false;
+    rBool = false;
   }
-  for(i = placedObjects.length; i != 0; i--) {
-    if(placedObjectsX[i-1] == inX && placedObjectsY[i-1] == inY) {
+  for(i = placedObjects.length; i >= 0; i--) {
+    if(placedObjects[i-1].xLoc == inX && placedObjects[i-1].yLoc == inY) {
       curBuld=i-1;
-      return true;
+      rName = placedObjects[curBuld].name;
+      rBool = true;
     }else{
-      curBuld=0;
-      return false;
+      rName = "";
+      rBool = false;
     }
+  }
+  if(name == true) {
+    return rName;
+  }else{
+    return rBool;
   }
 }
 
