@@ -14,6 +14,7 @@
 */
 //buildings
 function Mine() {
+  this.name = "mine";
   this.color = "grey";
   this.imgdc = "assets/grey mine dc.svg";
   this.imgc = "assets/grey mine.svg";
@@ -38,6 +39,7 @@ function Mine() {
   }
 };
 function Pump() {
+  this.name = "pump";
   this.color = "grey";
   this.imgdc = "assets/grey pump dc.svg";
   this.imgc = "assets/grey pump.svg";
@@ -83,6 +85,8 @@ var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
 var buildings = ["conveyor","pipe","mine","smelter","fabricator","pump","filter","mixer","small storage","large storage","small tank","large tank"];
 var placedObjects = [];
+var placedObjectsX = [];
+var placedObjectsY = [];
 var selBounds = [[],[],[]];
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
@@ -144,9 +148,9 @@ function mm(e) {
   var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("cor").innerHTML = cor;
   document.getElementById("money").innerHTML = "money:$" + money;
+  document.getElementById("debug").innerHTML = "hovering: " + checkSpace(bx,by) + " bulds: " + placedObjects.length + " X: " + placedObjectsX[0] + " Y: " + placedObjectsY[0];
   if(clicked == false) {
     clear();
-    drawGrid(bx,by);
     ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
@@ -170,10 +174,11 @@ function mm(e) {
       for(let j = buld; j != 0; j--) {
         if(ocx >= selBounds[j-1][0] && ocx <= selBounds[j-1][1] && ocy >= selBounds[j-1][2] && ocy <= selBounds[j-1][3]) {
           ctx.fillStyle = "#ffff00";
-          ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
-          document.getElementById("debug").innerHTML = "x: " + selBounds[j-1][0] + " y: " + selBounds[j-1][2];
-          hoveredBuld=buildingsUnlocked[j-1];
-          break;
+          if(checkSpace(cx,cy) == false) {
+            ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
+            hoveredBuld=buildingsUnlocked[j-1];
+            break;
+          }
         }else{
           hoveredBuld="";
         }
@@ -193,20 +198,16 @@ function mm(e) {
 
 function mc() {
   clear();
-  clickedBuld = checkSpace();
   if (clicked == false) {
     hoveredBuld="";
     clicked=true;
     cx=bx, cy=by;
-    drawGrid(cx,cy);
     bSel();
-  } else if (clicked == false && clickedBuld == true) {
+  } else if (clicked == false && checkSpace(cx,cy) == true) {
     var curTier=placedObjects[curBuld].tier;
-    if(money >= Math.pow((curTier*2),1.5) && curTier <= 5){
+    if(money >= 10 && curTier <= 5){
       placedObjects[curBuld].tier = curTier + 1;
-      money = money - Math.pow((curTier*2),1.5);
     }
-    drawGrid(cx,cy);
   } else if (clicked == true && hoveredBuld != "") {
     let len = placedObjects.length;
     if(hoveredBuld=="mine") {
@@ -218,17 +219,20 @@ function mc() {
     placedObjects[len].yLoc = cy;
     placedObjects[len].imgUp();
     placedObjects[len].update();
-    drawGrid(cx,cy);
+    placedObjectsX[len] = cx;
+    placedObjectsY[len] = cy;
   } else if (clicked == true) {
     clicked = false;
     clear();
-    drawGrid(cx,cy);
   }
 }
 
-function checkSpace(x,y) {
+function checkSpace(inX,inY) {
+  if(placedObjects.length == 0){
+    return false;
+  }
   for(i = placedObjects.length; i != 0; i--) {
-    if(x == placedObjects[i-1].xLoc && y == placedObjects[i-1].yLoc) {
+    if(placedObjectsX[i-1] == inX && placedObjectsY[i-1] == inY) {
       curBuld=i-1;
       return true;
     }else{
@@ -316,11 +320,13 @@ function bSel() {
   }else if(by >= 2) {
     clickedDir=5;
     for(let j = buld; j != 0; j--) {
-      ctx.drawImage(buildingsUnlockedImgs[j-1],(bx-m+j-1)*gs, (by-1)*gs, gs, gs);
-      selBounds[j-1][0] = (bx-m+j-1)*gs; // x1
-      selBounds[j-1][1] = ((bx-m+j-1)*gs)+gs; // x2
-      selBounds[j-1][2] = (by-1)*gs; //y1
-      selBounds[j-1][3] = ((by-1)*gs)+gs; //y2
+      if(checkSpace(bx,by) == false) {
+        ctx.drawImage(buildingsUnlockedImgs[j-1],(bx-m+j-1)*gs, (by-1)*gs, gs, gs);
+        selBounds[j-1][0] = (bx-m+j-1)*gs; // x1
+        selBounds[j-1][1] = ((bx-m+j-1)*gs)+gs; // x2
+        selBounds[j-1][2] = (by-1)*gs; //y1
+        selBounds[j-1][3] = ((by-1)*gs)+gs; //y2
+      }
     }
   }
 }
