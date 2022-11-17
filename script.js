@@ -35,8 +35,8 @@ function Mine() {
     }
   },
  this.update = function() {
-    ctx.drawImage(this.img, this.xLoc*gs, this.yLoc*gs, gs, gs);
-  }
+  ctx.drawImage(this.img, (this.xLoc - (imgScale/2))*gs, (this.yLoc - (imgScale/2))*gs, (imgScale+1)*gs, (imgScale+1)*gs);
+}
 };
 function Pump() {
   this.name = "pump";
@@ -60,10 +60,11 @@ function Pump() {
     }
   },
  this.update = function() {
-    ctx.drawImage(this.img, this.xLoc*gs, this.yLoc*gs, gs, gs);
+    ctx.drawImage(this.img, (this.xLoc - (imgScale/2))*gs, (this.yLoc - (imgScale/2))*gs, (imgScale+1)*gs, (imgScale+1)*gs);
   }
 }
 //vars
+var imgScale=0.15;
 var money=100;
 var gs=50;
 var gxs=20, gys=10;
@@ -75,6 +76,7 @@ var bx=0, by=0;
 var cx=0, cy=0;
 var clicked=false;
 var hoveredBuld="";
+var hovered=false;
 var clickedBuld=false;
 var curBuld=0;
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
@@ -148,13 +150,14 @@ function mm(e) {
   var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")";
   document.getElementById("cor").innerHTML = cor;
   document.getElementById("money").innerHTML = "money:$" + money;
-  document.getElementById("debug").innerHTML = "hovering: " + checkSpace(bx,by,false) + " bulds: " + checkSpace(bx,by,true) + " X: " + placedObjectsX[0] + " Y: " + placedObjectsY[0];
+  hovered = checkSpace(bx,by);
+  document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? placedObjects[curBuld].name : " ")+ " X: " + (hovered == true ? placedObjects[curBuld].xLoc : 0) + " Y: " + (hovered == true ? placedObjects[curBuld].yLoc : 0);
   if(clicked == false) {
-    clear();
+    drawGrid(bx,by);
     ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
-  }else if(clicked == true) {
+  }else if(clicked == true && hovered == false) {
     var buld = buildingsUnlocked.length;
     var m = ((buld - 1)/2);
     if(buld % 2 == 0){
@@ -174,7 +177,7 @@ function mm(e) {
       for(let j = buld; j != 0; j--) {
         if(ocx >= selBounds[j-1][0] && ocx <= selBounds[j-1][1] && ocy >= selBounds[j-1][2] && ocy <= selBounds[j-1][3]) {
           ctx.fillStyle = "#ffff00";
-          if(checkSpace(cx,cy,false) == false) {
+          if(checkSpace(cx,cy) == false) {
             ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
             hoveredBuld=buildingsUnlocked[j-1];
             break;
@@ -193,6 +196,8 @@ function mm(e) {
         clicked = false;
       }
     }
+  }else{
+    clicked = false;
   }
 }
 
@@ -203,7 +208,7 @@ function mc() {
     clicked=true;
     cx=bx, cy=by;
     bSel();
-  } else if (clicked == false && checkSpace(cx,cy,false) == true) {
+  } else if (clicked == false && checkSpace(cx,cy) == true) {
     var curTier=placedObjects[curBuld].tier;
     if(money >= 10 && curTier <= 5){
       placedObjects[curBuld].tier = curTier + 1;
@@ -227,31 +232,21 @@ function mc() {
   }
 }
 
-function checkSpace(inX,inY,name) {
-  var rBool = false;
-  var rName = "";
+function checkSpace(inX,inY) {
   if(placedObjects.length == 0){
-    rBool = false;
+    return false;
   }
-  for(i = placedObjects.length; i >= 0; i--) {
-    if(placedObjects[i-1].xLoc == inX && placedObjects[i-1].yLoc == inY) {
-      curBuld=i-1;
-      rName = placedObjects[curBuld].name;
-      rBool = true;
-    }else{
-      rName = "";
-      rBool = false;
+  for(i = 0; i < placedObjects.length; i++) {
+    if(placedObjects[i].xLoc == inX && placedObjects[i].yLoc == inY) {
+      curBuld=i;
+      return true;
     }
   }
-  if(name == true) {
-    return rName;
-  }else{
-    return rBool;
-  }
+  return false;
 }
 
 function clear() {
-  ctx.clearRect(0, 0, gxs*gs, gys*gs);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   if(placedObjects.length != 0) {
     placedObjects.forEach(updateObjs);
   }
@@ -262,7 +257,9 @@ function updateObjs(item) {
 }
 
 function drawGrid(x,y){
+  clear();
   ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
   ctx.moveTo((x)*gs, (y-0.5)*gs);
   ctx.lineTo((x)*gs, (y+1.5)*gs);
   ctx.moveTo((x+1)*gs, (y-0.5)*gs);
@@ -283,6 +280,7 @@ function distR(x){
 }
 
 function bSel() {
+  drawGrid(bx,by);
   var buld = buildingsUnlocked.length;
   var m = ((buld - 1)/2);
   if(buld % 2 == 0){

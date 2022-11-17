@@ -1,4 +1,3 @@
-/*
 var frames = 1;
 function fpsTest(){
   document.getElementById("debug").innerHTML = frames + " current fps: " + (1000/frameTime).toFixed(1) + " fps at 250: " + fps25 + " fps at 500: " + fps50 + " fps at 750: " + fps75 + " fps at 1000: " + fps100 + " fps at 5000: " + fps500 + " fps at 10000: " + fps1000;
@@ -39,5 +38,4 @@ async function fpsTestStart() {
   }
 }
 
-//fpsTestStart();
-*/
+fpsTestStart();
