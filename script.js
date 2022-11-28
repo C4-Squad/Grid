@@ -24,6 +24,7 @@
 4 nitrogen + pump - 2
 5 hydrogen + pump - 3
 */
+import { SVG } from '@svgdotjs/svg.js'
 //buildings
 function Mine() {
   this.name = "mine";
@@ -362,7 +363,7 @@ function bSel() {
 function rgbToHex(r, g, b) {
   return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
-
+/*
 function erase() {
   if(mode == "place"){
     document.getElementById("b1").innerHTML = "erase";
@@ -379,8 +380,11 @@ function rt() {
   for(var i = 0; i < doc.length; i++) {
     doc[i].transform("rotate(45)");
   }
+  svg.dataset = doc;
+  document.getElementById("debug").innerHTML = "asfa";
 }
 
 
 function generateWorld() {
 }
+*/
