@@ -12,6 +12,18 @@
 11 small and large tank + stores fluids
 5 tiers
 */
+/*resorces + buildings - tier required
+1 iron + mine - 1
+2 copper + mine - 1
+3 bronze + mine - 2
+4 brass + mine - 2
+5 gold + mine - 3
+1 water + pump - 1
+2 oil + pump - 1
+3 petroleum + pump - 2
+4 nitrogen + pump - 2
+5 hydrogen + pump - 3
+*/
 //buildings
 function Mine() {
   this.name = "mine";
@@ -64,17 +76,18 @@ function Pump() {
   }
 }
 //vars
-var imgScale=0.15;
+var imgScale=0.35;
 var money=100;
-var gs=50;
-var gxs=20, gys=10;
-var ox=10, oy=120;
+var gs=35;
+var gxs=35, gys=15;
+var ox=10, oy=135;
 var ocx=0, ocy=0;
 var cxs=gxs*gs, cys=gys*gs;
 var sel = 0;//0 if far left or bottom
 var bx=0, by=0;
 var cx=0, cy=0;
 var clicked=false;
+var mode="place";//place erase
 var hoveredBuld="";
 var hovered=false;
 var clickedBuld=false;
@@ -90,11 +103,13 @@ var placedObjects = [];
 var placedObjectsX = [];
 var placedObjectsY = [];
 var selBounds = [[],[],[]];
+var underSolids = [];
+var aboveSolids = [];
+var underLiquids = [];
+var aboveLiquids = [];
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width=cxs, canvas.height=cys;
-document.body.appendChild(this.canvas);
-canvas.style="border:1px solid #ff0000;";
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 var timeout;
@@ -177,7 +192,7 @@ function mm(e) {
       for(let j = buld; j != 0; j--) {
         if(ocx >= selBounds[j-1][0] && ocx <= selBounds[j-1][1] && ocy >= selBounds[j-1][2] && ocy <= selBounds[j-1][3]) {
           ctx.fillStyle = "#ffff00";
-          if(checkSpace(cx,cy) == false) {
+          if(checkSpace(cx,cy) == false && clicked == true) {
             ctx.rect(selBounds[j-1][0], selBounds[j-1][2], gs, gs);
             hoveredBuld=buildingsUnlocked[j-1];
             break;
@@ -203,17 +218,17 @@ function mm(e) {
 
 function mc() {
   clear();
-  if (clicked == false) {
+  if (clicked == false && mode == "place") {
+    cx = bx, cy = by;
     hoveredBuld="";
     clicked=true;
-    cx=bx, cy=by;
     bSel();
-  } else if (clicked == false && checkSpace(cx,cy) == true) {
+  } else if (clicked == false && checkSpace(cx,cy) == true && mode == "place") {
     var curTier=placedObjects[curBuld].tier;
     if(money >= 10 && curTier <= 5){
       placedObjects[curBuld].tier = curTier + 1;
     }
-  } else if (clicked == true && hoveredBuld != "") {
+  } else if (clicked == true && hoveredBuld != "" && mode == "place") {
     let len = placedObjects.length;
     if(hoveredBuld=="mine") {
       placedObjects[len] = new Mine();
@@ -226,7 +241,12 @@ function mc() {
     placedObjects[len].update();
     placedObjectsX[len] = cx;
     placedObjectsY[len] = cy;
+  } else if (clicked == false && checkSpace(cx,cy) == true && mode == "erase") {
+    delete placedObjects[curBuld];
+    delete placedObjectsX[curBuld];
+    delete placedObjectsY[curBuld];
   } else if (clicked == true) {
+    cx=0, cy=0;
     clicked = false;
     clear();
   }
@@ -237,9 +257,11 @@ function checkSpace(inX,inY) {
     return false;
   }
   for(i = 0; i < placedObjects.length; i++) {
-    if(placedObjects[i].xLoc == inX && placedObjects[i].yLoc == inY) {
-      curBuld=i;
-      return true;
+    if(placedObjects[i] != undefined) {
+      if(placedObjects[i].xLoc == inX && placedObjects[i].yLoc == inY) {
+        curBuld=i;
+        return true;
+      }
     }
   }
   return false;
@@ -339,4 +361,26 @@ function bSel() {
 
 function rgbToHex(r, g, b) {
   return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+}
+
+function erase() {
+  if(mode == "place"){
+    document.getElementById("b1").innerHTML = "erase";
+    mode = "erase";
+  }else if(mode == "erase") {
+    document.getElementById("b1").innerHTML = "place";
+    mode = "place";
+  }
+}
+
+function rt() {
+  var svg = document.getElementById("svg");
+  var doc = svg.getSVGDocument();
+  for(var i = 0; i < doc.length; i++) {
+    doc[i].transform("rotate(45)");
+  }
+}
+
+
+function generateWorld() {
 }

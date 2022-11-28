@@ -1,9 +1,16 @@
 <html>
+  <style>@import url("style.css");</style>
   <body>
-    <p id="money">nan</p>
-    <p id="cor">nan</p>
-    <p id="debug">nan</p>
-    <canvas id="canvas"></canvas>
+    <object id="svg" data="assets/blue mine dc.svg" type="image/svg+xml"></object>
+    <p id="cor" class="debug">nan</p>
+    <p id="debug" class="debug" >nan</p>
+    <div class="game">
+      <p id="money">nan</p>
+      <button id="b1" onclick="erase()">erase</button>
+      <button id="b2" onclick="rt()">b2</button>
+      <button id="b3">b3</button>
+      <canvas id="canvas"></canvas>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
