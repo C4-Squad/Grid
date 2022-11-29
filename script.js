@@ -24,7 +24,6 @@
 4 nitrogen + pump - 2
 5 hydrogen + pump - 3
 */
-import { SVG } from '@svgdotjs/svg.js'
 //buildings
 function Mine() {
   this.name = "mine";
@@ -35,6 +34,7 @@ function Mine() {
   this.connected = false;
   this.xLoc = 0;
   this.yLoc = 0;
+  this.rot = 0;
   this.tier = 1;
   this.colorUp = function() {
     this.imgdc = "assets/" + this.color + " mine dc.svg";
@@ -47,9 +47,9 @@ function Mine() {
       this.img.src = this.imgdc;
     }
   },
- this.update = function() {
-  ctx.drawImage(this.img, (this.xLoc - (imgScale/2))*gs, (this.yLoc - (imgScale/2))*gs, (imgScale+1)*gs, (imgScale+1)*gs);
-}
+  this.update = function() {
+    drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
+  }
 };
 function Pump() {
   this.name = "pump";
@@ -60,6 +60,7 @@ function Pump() {
   this.connected = false;
   this.xLoc = 0;
   this.yLoc = 0;
+  this.rot = 0;
   this.tier = 1;
   this.colorUp = function() {
     this.imgdc = "assets/" + this.color + " pump dc.svg";
@@ -72,21 +73,22 @@ function Pump() {
       this.img.src = this.imgdc;
     }
   },
- this.update = function() {
-    ctx.drawImage(this.img, (this.xLoc - (imgScale/2))*gs, (this.yLoc - (imgScale/2))*gs, (imgScale+1)*gs, (imgScale+1)*gs);
+  this.update = function() {
+    drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
   }
 }
 //vars
-var imgScale=0.35;
+var imgScale=0.5;
 var money=100;
 var gs=35;
-var gxs=35, gys=15;
-var ox=10, oy=135;
+var gxs=20, gys=10;
+var ox=10, oy=250;
 var ocx=0, ocy=0;
 var cxs=gxs*gs, cys=gys*gs;
 var sel = 0;//0 if far left or bottom
 var bx=0, by=0;
 var cx=0, cy=0;
+var plcRot=0;
 var clicked=false;
 var mode="place";//place erase
 var hoveredBuld="";
@@ -111,6 +113,8 @@ var aboveLiquids = [];
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width=cxs, canvas.height=cys;
+document.body.appendChild(this.canvas);
+canvas.style="border:1px solid #ff0000;";
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 var timeout;
@@ -170,7 +174,7 @@ function mm(e) {
   document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? placedObjects[curBuld].name : " ")+ " X: " + (hovered == true ? placedObjects[curBuld].xLoc : 0) + " Y: " + (hovered == true ? placedObjects[curBuld].yLoc : 0);
   if(clicked == false) {
     drawGrid(bx,by);
-    ctx.drawImage(buildingsColored[0][0], bx*gs, by*gs, gs, gs);
+    drawImage(buildingsColored[0][0], bx, by, imgScale, plcRot);
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
   }else if(clicked == true && hovered == false) {
@@ -238,7 +242,8 @@ function mc() {
     }
     placedObjects[len].xLoc = cx;
     placedObjects[len].yLoc = cy;
-    placedObjects[len].imgUp();
+    placedObjects[len].rot = plcRot;
+    placedObjects[len].imgUp(document.getElementById("svg").data);
     placedObjects[len].update();
     placedObjectsX[len] = cx;
     placedObjectsY[len] = cy;
@@ -363,7 +368,7 @@ function bSel() {
 function rgbToHex(r, g, b) {
   return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
-/*
+
 function erase() {
   if(mode == "place"){
     document.getElementById("b1").innerHTML = "erase";
@@ -375,16 +380,18 @@ function erase() {
 }
 
 function rt() {
-  var svg = document.getElementById("svg");
-  var doc = svg.getSVGDocument();
-  for(var i = 0; i < doc.length; i++) {
-    doc[i].transform("rotate(45)");
+  plcRot += 90; // add 90 degrees, you can change this as you want
+  if (plcRot === 360) { 
+    plcRot = 0;
   }
-  svg.dataset = doc;
-  document.getElementById("debug").innerHTML = "asfa";
 }
 
+function drawImage(image, x, y, scale, rotation){
+  ctx.setTransform(scale, 0, 0, scale, (x*gs)+(gs/2), (y*gs)+(gs/2)); // sets scale and origin
+  ctx.rotate(rotation * (Math.PI/180));
+  ctx.drawImage(image, -image.width / 2, -image.height / 2);
+  ctx.setTransform(1,0,0,1,0,0); // which is much quicker than save and restore
+} 
 
 function generateWorld() {
 }
-*/
