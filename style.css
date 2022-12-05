@@ -22,7 +22,6 @@
 }
 
 #canvas {
-    cursor:none;
     border:1px solid #ff0000;
     grid-row: 2;
     grid-column-start: 1;
