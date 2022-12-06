@@ -1,16 +1,18 @@
-/*buildings + functions
-1 conveyor + move resorces
-2 pipe + move fluids
-3 mine + collect raw resorces
-4 smelter + make refined resorces
-5 fabrictor + make solid products
-6 pump + collect crude fluids
-7 filter + make refined fluids
-8 mixer + make fluid products
-9 constructor + make products with fluids and solids
-10 small and large storage + stores resorces
-11 small and large tank + stores fluids
-12 hub + sell resorces and unlock buildings
+/*buildings + functions - btn id
+1 conveyor + move resorces - buld1
+2 pipe + move fluids - buld8
+3 mine + collect raw resorces - buld2
+4 smelter + make refined resorces - buld3
+5 fabrictor + make solid products - buld4
+6 pump + collect crude fluids - buld9
+7 filter + make refined fluids - buld10
+8 mixer + make fluid products - buld11
+9 constructor + make products with fluids and solids - buld7
+10 small storage + stores resorces - buld5
+11 large storage + stores resorces - buld6
+12 small tank + stores fluids - buld12
+13 large tank + stores fluids - buld13
+14 hub + sell resorces and unlock buildings - buld14
 3 tiers | mines and pumps only
 */
 /*resorces + buildings - tier required
@@ -34,13 +36,15 @@ purple #B26CB2
 function Iron() {
   this.id = "iron";
   this.type = "mine";
+  this.offset1 = 0;
+  this.offset2 = 1;
   this.xLoc = 0;
   this.yLoc = 0;
   this.level = 2;
   this.name = "level " + this.level + " iron node";
   this.update = function() {
     ctx.fillStyle = "#55B3B4";
-    ctx.fillRect((this.xLoc-0.5)*gs, (this.yLoc-0.5)*gs, (2)*gs, (2)*gs);
+    ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
 }
 //buildings
@@ -105,7 +109,7 @@ var i=0;
 var money=100;
 var gs=20;
 var gxs=30, gys=15;
-var ox=10, oy=195;
+var ox=9, oy=214;
 var ocx=0, ocy=0;
 var o=0
 var cxs=gxs*gs, cys=gys*gs;
@@ -118,7 +122,6 @@ var clicked=false;
 var hoveredNode=false;
 var mode="place";//place erase
 var hoveredBuld="";
-var hovered=false;
 var clickedBuld=false;
 var curBuld=0;
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
@@ -130,8 +133,10 @@ var buildingsColored = [[],[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey|
 var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
 var extractors = ["mine","pump"];
-var buildings = ["conveyor","pipe","smelter","fabricator","filter","mixer","small storage","large storage","small tank","large tank"];
+var buildings = ["conveyor","pipe","smelter","fabricator","filter","mixer","small storage","large storage"  ,"small tank","large tank"];
+var selBuldOrder = ["conveyor","mine","smelter","fabricator","small storage","large storage","constructor"]
 var placedObjects = [];
+var selObject = 0
 var selBounds = [[],[],[],[],[]];
 var solidNodes = 5, liquidNodes = 5;
 var nodes = [];
@@ -145,6 +150,10 @@ canvas.width=cxs, canvas.height=cys;
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 document.getElementById("canvas").innerHTML = canvas;
+
+function myFunction() {
+  document.getElementById("demo").innerHTML = ages.find(checkAge);
+}
 
 function sleep(ms) {
   return new Promise(
@@ -177,131 +186,86 @@ function mm(e) {
   var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")" + " Clicked Coordinates: (" + cx + "," + cy + ")"  + " Bounds 1 Coordinates: (X:" + selBounds[0][0] + "," + selBounds[0][1] + " Y:" + selBounds[0][2] + "," + selBounds[0][3] + ")"  + " Bounds 2 Coordinates: (X:" + selBounds[1][0] + "," + selBounds[1][1] + " Y:" + selBounds[1][2] + "," + selBounds[1][3] + ")";
   document.getElementById("cor").innerHTML = cor;
   document.getElementById("money").innerHTML = "money:$" + money;
-  document.getElementById("debug2").innerHTML = buildingsUnlockedImgs;
+  document.getElementById("debug2").innerHTML = extractorsUnlockedImgs;
   hovered = checkSpace(bx,by);
   if(hoveredNode == false){
     document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? placedObjects[curBuld].name : " ")+ " X: " + (hovered == true ? placedObjects[curBuld].xLoc : 0) + " Y: " + (hovered == true ? placedObjects[curBuld].yLoc : 0) + " clicked dir: " + clickedDir;
   }else{
-    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? nodes[curBuld].name : " ")+ " X: " + (hovered == true ? nodes[curBuld].xLoc : 0) + " Y: " + (hovered == true ? nodes[curBuld].yLoc : 0 + " clicked dir: " + clickedDir);
+    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? nodes[curBuld].name : " ") + " X: " + (hovered == true ? nodes[curBuld].xLoc : 0) + " Y: " + (hovered == true ? nodes[curBuld].yLoc : 0 + " clicked dir: " + clickedDir);
   }
   if(clicked == false) {
     if(hoveredNode == false){
       drawGrid(bx,by);
     }else if(hoveredNode == true){
-      if(nodes[curBuld].id == "mine"){
-        clear();
-        ctx.drawImage(extractorsUnlockedImgs[extractorsUnlocked.find("mine")],bx*gs,by*gs,gs,gs);  
+      clear();
+      if(nodes[curBuld].type == "mine"){
+        ctx.drawImage(extractorsUnlockedImgs[extractorsUnlocked.includes("mine")],bx*gs,by*gs,gs,gs);  
+      }else if(nodes[curBuld].type == "pump"){
+        ctx.drawImage(extractorsUnlockedImgs[extractorsUnlocked.includes("pump")],bx*gs,by*gs,gs,gs);  
       }
     }
     //clearTimeout(timeout);
     //timeout = setTimeout(function(){clear();}, 1000);
-  }else if(clicked == true && hovered == false) {
-    var buld = buildingsUnlocked.length;
-    var m = ((buld - 1)/2);
-    if(buld % 2 == 0){
-      m = 0.5 + ((buld)/2);
-      o = 0.5;
-    }
-    o = 0;
-    if(clickedDir==1) {
-      //        right            left              down            up
-      if(bx > (cx + m + 1) || bx < (cx - m - 1) || by > (cy + 1) || by < (cy - 2)) {
-        clicked = false;
-      }
-    }else if(clickedDir==3) {
-      //        right            left              down            up
-      if(bx > (cx + 2) || bx < (cx - 1) || by > (cy + m + 1) || by < (cy - m - 1)) {
-        clicked = false;
-      }
-    }else if(clickedDir==5) {
-      drawGrid(cx,cy);
-      for(i = 0; i < buld; i++) {
-        ctx.drawImage(selBounds[i][4],selBounds[i][0],selBounds[i][2], gs, gs);
-      }
-      for(i = 0; i < buld; i++) {
-        if(ocx >= selBounds[i][0] && ocx < selBounds[i][1] && ocy >= selBounds[i][2] && ocy < selBounds[i][3]) {
-          ctx.fillStyle = "00000050";
-          ctx.fillRect((selBounds[i][0]), (selBounds[i][2]), gs, gs);
-          hoveredBuld=buildingsUnlocked[i];
-          break;
-        }else{
-          hoveredBuld="";
-        }
-      }
-      //        right            left              down            up
-      if(bx > (cx + m + 1) || bx < (cx - m - 1) || by > (cy + 1) || by < (cy - 2)) {
-        clicked = false;
-      }
-    }else if(clickedDir==7) {
-      //        right            left              down            up
-      if(bx > (cx + 1) || bx < (cx - 2) || by > (cy + m + 1) || by < (cy - m - 1)) {
-        clicked = false;
-      }
-    }
-  }else{
-    clicked = false;
   }
 }
 
 function mc() {
   clear();
-  if (clicked == true && cx != 0 && cy != 0) {
-    cx=0, cy=0;
-    clicked = false;
-    clear();
-  }else if (clicked == false && checkSpace(bx,by) == true && hoveredNode == false && mode == "place") {
+  if (checkSpace(bx,by) == true && hoveredNode == false && mode == "place") {
     var curTier=placedObjects[curBuld].tier;
     if(money >= 10 && curTier <  3){
       placedObjects[curBuld].tier = curTier + 1;
       placedObjects[curBuld].update();
     }
-  }else if (clicked == false && mode == "place" && checkSpace(bx,by) == true && hoveredNode == true) {
-    document.getElementById(" ").innerHTML = "11";
-    if(nodes[curBuld].id == "mine" && extractorsUnlocked.find("mine") != undefined) {
+  }else if (mode == "place" && checkSpace(bx,by) == true && hoveredNode == true) {
+    document.getElementById("debug2").innerHTML = "1";
+    if(nodes[curBuld].type == "mine" && extractorsUnlocked.includes("mine") == true) {
+      document.getElementById("debug2").innerHTML = "2";
       placedObjects[len] = new Mine();
-    }else if(nodes[curBuld].id == "pump" && extractorsUnlocked.find("pump") != undefined){
+    }else if(nodes[curBuld].type == "pump" && extractorsUnlocked.includes("pump") == true){
+      document.getElementById("debug2").innerHTML = "22";
       placedObjects[len] = new Pump();
     }
+    document.getElementById("debug2").innerHTML = "3";
     placedObjects[len].xLoc = bx;
     placedObjects[len].yLoc = by;
     placedObjects[len].rot = plcRot;
     placedObjects[len].imgUp();
     placedObjects[len].update();
-  }else if(clicked == false && mode == "place" && checkSpace(bx,by) == false && hoveredNode == false){
+    document.getElementById("debug2").innerHTML = "4";
+  }else if(mode == "place" && checkSpace(bx,by) == false && hoveredNode == false){
     cx = bx, cy = by;
     hoveredBuld="";
-    clicked=true;
-    bSel();
-  }else if (clicked == true && mode == "place") {
+  }else if (mode == "place") {
     let len = placedObjects.length;
     placedObjects[len].xLoc = bx;
     placedObjects[len].yLoc = bx;
     placedObjects[len].rot = plcRot;
     placedObjects[len].imgUp();
     placedObjects[len].update();
-  } else if (clicked == false && checkSpace(cx,cy) == true && mode == "erase") {
+  } else if (checkSpace(cx,cy) == true && mode == "erase") {
     delete placedObjects[curBuld];
   }
 }
 
 function checkSpace(inX,inY) {
-  if(nodes.length != 0){
-    for(i = 0; i < nodes.length; i++) {
-      if(nodes[i] != undefined) {
-        if(nodes[i].xLoc == inX && nodes[i].yLoc == inY) {
-          curBuld=i;
-          hoveredNode=true;
-          return true;
-        }
-      }
-    }
-  }
   if(placedObjects.length != 0){
     for(i = 0; i < placedObjects.length; i++) {
       if(placedObjects[i] != undefined) {
         if(placedObjects[i].xLoc == inX && placedObjects[i].yLoc == inY) {
           curBuld=i;
           hoveredNode=false;
+          return true;
+        }
+      }
+    }
+  }
+  if(nodes.length != 0){
+    for(i = 0; i < nodes.length; i++) {
+      if(nodes[i] != undefined) {
+        if(nodes[i].xLoc == inX && nodes[i].yLoc == inY) {
+          curBuld=i;
+          hoveredNode=true;
           return true;
         }
       }
@@ -352,66 +316,6 @@ function distR(x){
   return gxs - x;
 }
 
-function bSel() {
-  drawGrid(bx,by);
-  var buld = buildingsUnlocked.length;
-  var m = ((buld - 1)/2);
-  if(buld % 2 == 0){
-    m = -0.5 + ((buld)/2);
-    o = 0.5;
-  }
-  o = 0;
-  //bottom left
-  if(bx <= m-1 && by >= gys-m-1){
-    clickedDir=4;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect((bx+1)*gs, (by-buld+distB(by))*gs, gs, (buld*gs));
-    ctx.fillStyle = "#ff0000";
-  //top left
-  }else if(bx <= m-1 && by <= m){
-    clickedDir=2;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect((bx+1)*gs, (by-by)*gs, gs, (buld*gs));
-  //top right
-  }else if(bx >= gys-m-1 && by <= m){
-    clickedDir=8
-    ctx.fillStyle = "#000000";
-    ctx.fillRect((bx-1)*gs, (by-by)*gs, gs, (buld*gs));
-  //bottom right
-  }else if(bx >= gys-m-1 && by >= gys-m-1){
-    clickedDir=6;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect((bx-1)*gs, (by-buld+distB(by))*gs, gs, (buld*gs));
-  //right
-  }else if(bx >= gxs-m-1) {
-    clickedDir=7;
-    ctx.fillStyle = "#00ffff";
-    ctx.fillRect((bx-1)*gs, (by-m)*gs, gs,(buld*gs));
-  //left
-  }else if(bx <= m) {
-    clickedDir=3;
-    ctx.fillStyle = "#ffff00";
-    ctx.fillRect((bx+1)*gs, (by-m)*gs, gs, (buld*gs));
-  //up
-  }else if(by <= 2) {
-    clickedDir=1;
-    ctx.fillStyle = "#00ff00";
-    ctx.fillRect((bx-m)*gs, (by+1)*gs, (buld*gs), gs);
-  //down
-  }else if(by >= 2) {
-    clickedDir=5;
-    for(let i = 0; i < buld; i++) {
-      if(checkSpace(cx,cy) == false) {
-        selBounds[i][0] = (bx-m+i)*gs; // x1
-        selBounds[i][1] = (bx-m+i+1)*gs; // x2
-        selBounds[i][2] = (by-1)*gs; //y1
-        selBounds[i][3] = (by)*gs; //y2
-        selBounds[i][4] = buildingsUnlockedImgs[i];
-      }
-    }
-  }
-}
-
 function rgbToHex(r, g, b) {
   return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
 }
@@ -448,4 +352,7 @@ function generateWorld() {
   nodes[len].xLoc = gwx;
   nodes[len].yLoc = gwy;
   clear();
+}
+
+function setbuld(btn){
 }
