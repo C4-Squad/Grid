@@ -1,6 +1,7 @@
 .game {
     display: grid;
-    grid-template-columns: 200px 200px 200px;
+    grid-template-columns: 100px 100px 100px 100px;
+    grid-template-rows: 50px auto;
 }
 
 #money {
@@ -9,20 +10,25 @@
     grid-column: 1;
 }
 
-#b1 {
-    border:1px solid #ff00ff;
+#building {
+    border:1px solid #ffff00;
     grid-row: 1;
     grid-column: 2;
 }
 
-#b2 {
+#b1 {
     border:1px solid #ff00ff;
     grid-row: 1;
     grid-column: 3;
 }
 
+#b2 {
+    border:1px solid #ff00ff;
+    grid-row: 1;
+    grid-column: 4;
+}
+
 #canvas {
-    border:1px solid #ff0000;
     grid-row: 2;
     grid-column-start: 1;
     grid-column-end: 4;
@@ -31,7 +37,7 @@
 .buld {
     display: grid;
     grid-template-columns: 100px 100px 100px 100px 100px 100px 100px;
-    grid-template-rows: 50px 50px;
+    grid-template-rows: 100px 100px;
 }
 
 #buld1 {

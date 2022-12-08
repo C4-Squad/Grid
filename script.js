@@ -18,7 +18,7 @@
 /*resorces + buildings - tier required
 1 iron + mine - 1
 2 copper + mine - 1
-3 bronze + mine - 2
+3 limestone + mine - 2
 4 quarts + mine - 3
 1 water + pump - 1
 2 oil + pump - 1
@@ -26,24 +26,82 @@
 4 nitrogen + pump - 3
 3 puritys | 1 impure 2 normal 3 pure
 */
-/*colors
-blue #55B3B4
-red #E53838
-yellow #F6B128
-purple #B26CB2
+/*colors + solid resorce - liquid resorce
+blue #55B3B4 + iron - water
+red #E53838 + copper - oil
+yellow #F6B128 + limestone - petroleum
+purple #B26CB2 + quarts - nitrogen
 */
 //nodes
 function Iron() {
   this.id = "iron";
   this.type = "mine";
+  this.colorVal = "#55B3B4";
+  this.color = "blue";
+  this.output = 10; //per second
   this.offset1 = 0;
   this.offset2 = 1;
   this.xLoc = 0;
   this.yLoc = 0;
+  this.tier = 1;
   this.level = 2;
-  this.name = "level " + this.level + " iron node";
+  this.name = "level " + this.level + " " + this.id + " node";
   this.update = function() {
-    ctx.fillStyle = "#55B3B4";
+    ctx.fillStyle = this.colorVal;
+    ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
+  }
+}
+function Copper() {
+  this.id = "copper";
+  this.type = "mine";
+  this.colorVal = "#E53838";
+  this.color = "red";
+  this.output = 10; //per second
+  this.offset1 = 0;
+  this.offset2 = 1;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 1;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function() {
+    ctx.fillStyle = this.colorVal;
+    ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
+  }
+}
+function Limestone() {
+  this.id = "limestone";
+  this.type = "mine";
+  this.colorVal = "#F6B128";
+  this.color = "yellow";
+  this.output = 10; //per second
+  this.offset1 = 0;
+  this.offset2 = 1;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 2;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function() {
+    ctx.fillStyle = this.colorVal;
+    ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
+  }
+}
+function Quarts() {
+  this.id = "quarts";
+  this.type = "mine";
+  this.colorVal = "#B26CB2";
+  this.color = "purple";
+  this.output = 10; //per second
+  this.offset1 = 0;
+  this.offset2 = 1;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 3;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function() {
+    ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
 }
@@ -59,7 +117,9 @@ function Mine() {
   this.yLoc = 0;
   this.rot = 0;
   this.tier = 1;
-  this.name = "tier " + this.tier + " mine";
+  this.node = 0;
+  this.working = false;
+  this.name = "tier " + this.tier + " " + this.color + " " + this.id;
   this.colorUp = function() {
     this.imgdc = "assets/" + this.color + " mine dc.svg";
     this.imgdc = "assets/" + this.color + " mine.svg";
@@ -72,7 +132,10 @@ function Mine() {
     }
   },
   this.update = function() {
-    this.name = "tier " + this.tier + " mine";
+    if(nodes[this.node].tier <= this.tier){
+      this.running = true;
+    }
+    this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
     drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
   }
 };
@@ -87,7 +150,9 @@ function Pump() {
   this.yLoc = 0;
   this.rot = 0;
   this.tier = 1;
-  this.name = "tier " + this.tier + " pump";
+  this.node = 0;
+  this.running = false;
+  this.name = "tier " + this.tier + " " + this.color + " " + this.id;
   this.colorUp = function() {
     this.imgdc = "assets/" + this.color + " pump dc.svg";
     this.imgdc = "assets/" + this.color + " pump.svg";
@@ -100,21 +165,25 @@ function Pump() {
     }
   },
   this.update = function() {
-    this.name = "tier " + this.tier + " pump";
+    if(nodes[this.node].tier <= this.tier){
+      this.running = true;
+    }
+    this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
     drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
   }
 }
 //vars
 var i=0;
 var money=100;
-var gs=20;
-var gxs=30, gys=15;
-var ox=9, oy=214;
+var gs=15;
+var gxs=40, gys=20;
+var ox=9, oy=49;
 var ocx=0, ocy=0;
+var x=0, y=0;
+var gwx=0, gwy=0;
 var o=0
 var cxs=gxs*gs, cys=gys*gs;
 var imgScale=gs/50;
-var sel = 0;//0 if far left or bottom
 var bx=0, by=0;
 var cx=0, cy=0;
 var plcRot=0;
@@ -133,35 +202,113 @@ var buildingsColored = [[],[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey|
 var buildingsConnectedImgs = [];//mine and pump are blank
 var buildingsDisconnectedImgs = [];//mine and pump are blank
 var extractors = ["mine","pump"];
-var buildings = ["conveyor","pipe","smelter","fabricator","filter","mixer","small storage","large storage"  ,"small tank","large tank"];
-var selBuldOrder = ["conveyor","mine","smelter","fabricator","small storage","large storage","constructor"]
+var buildings = ["conveyor","pipe","smelter","fabricator","filter","mixer","small storage","large storage","small tank","large tank","hub"];
+var selBuldOrder = ["conveyor","mine","smelter","fabricator","small storage","large storage","constructor","pipe","pump","filter","mixer","small tank","large tank","hub"]
 var placedObjects = [];
-var selObject = 0
-var selBounds = [[],[],[],[],[]];
-var solidNodes = 5, liquidNodes = 5;
+var selObject;
+var solidNodes = 2;
+var liquidNodes = 2;
 var nodes = [];
-var timeout;
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+var cor;
+var debug = false;
+btn = "";
+var showGrid = true;
+
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
 ctx.lineCap = "round";
 ctx.lineJoin = "round";
-
 canvas.width=cxs, canvas.height=cys;
 canvas.onmousemove = function(event) {mm(event)};
 canvas.onclick = function(event) {mc(event)};
 document.getElementById("canvas").innerHTML = canvas;
+requestAnimationFrame(gameLoopF);
+var timeout;
+gameLoopS();
 
-function myFunction() {
-  document.getElementById("demo").innerHTML = ages.find(checkAge);
+function gameLoopS(){
+  btn = "";
+  for(i = 1; i <= 14; i++){
+    btn = "buld" + i.toString();
+    if(buildingsUnlocked.includes(selBuldOrder[i-1]) == true || extractorsUnlocked.includes(selBuldOrder[i-1]) == true){
+      document.getElementById(btn).style.color = "#ffffff";
+    }else{
+      document.getElementById(btn).style.color = "#000000";
+    }
+  }
+
+  timeout = setTimeout(function(){gameLoopS();}, 1000);
 }
 
-function sleep(ms) {
-  return new Promise(
-    resolve => setTimeout(resolve, ms)
-  );
+function gameLoopF(timeStamp){
+  clear();
+  if(showGrid == true){
+    drawGrid(bx,by)
+  }
+  document.getElementById("building").innerHTML = selObject;
+  document.getElementById("money").innerHTML = "money:$" + money;
+
+  cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")" + " Clicked Coordinates: (" + cx + "," + cy + ")";
+  document.getElementById("cor").innerHTML = cor;
+  console.log(cor);
+  //document.getElementById("debug2").innerHTML = placedObjects;
+  hovered = checkSpace(bx,by,false);
+  if(hoveredNode == false){
+    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? placedObjects[curBuld].name : " ")+ " X: " + (hovered == true ? placedObjects[curBuld].xLoc : 0) + " Y: " + (hovered == true ? placedObjects[curBuld].yLoc : 0);
+  }else{
+    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? nodes[curBuld].name : " ") + " X: " + (hovered == true ? nodes[curBuld].xLoc : 0) + " Y: " + (hovered == true ? nodes[curBuld].yLoc : 0);
+  }
+  if(hoveredNode == true){
+    if(nodes[curBuld].type == "mine" && selObject == "mine"){
+      drawImage(extractorsUnlockedImgs[0],bx,by,imgScale,plcRot);  
+    }else if(nodes[curBuld].type == "pump" && selObject == "pump"){
+      ctx.drawImage(extractorsUnlockedImgs[1],bx*gs,by*gs,gs,gs);  
+    }
+  }
+  requestAnimationFrame(gameLoopF);
 }
 
 function start() {
+  if(debug == true){
+    ox=9;
+    oy=174;
+  }else{
+    document.getElementById("cor").style.display = "none";
+    document.getElementById("debug").style.display = "none";
+    document.getElementById("debug2").style.display = "none";
+    document.getElementById("btn").style.display = "none";
+  }
+  btn = "";
+  for(i = 1; i <= 14; i++){
+    btn = "buld" + i.toString();
+    document.getElementById(btn).style.backgroundImage = "url('" + "assets/grey mine.svg" + "')";
+    document.getElementById(btn).style.backgroundPosition = "center center";
+    document.getElementById(btn).style.margin = "10px";
+    document.getElementById(btn).style.borderRadius = "10px";
+    document.getElementById(btn).style.backgroundColor = "#cccccc";
+    document.getElementById(btn).style.borderColor = "#cccccc";
+  }
+  document.getElementById("money").style.margin = "10px";
+  document.getElementById("money").style.borderRadius = "10px";
+  document.getElementById("money").style.backgroundColor = "#cccccc";
+  document.getElementById("money").style.borderColor = "#cccccc";
+  document.getElementById("money").style.textAlign = "center";
+  document.getElementById("building").style.margin = "10px";
+  document.getElementById("building").style.borderRadius = "10px";
+  document.getElementById("building").style.backgroundColor = "#cccccc";
+  document.getElementById("building").style.borderColor = "#cccccc";
+  document.getElementById("building").style.textAlign = "center";
+  document.getElementById("b1").style.margin = "10px";
+  document.getElementById("b1").style.borderRadius = "10px";
+  document.getElementById("b1").style.backgroundColor = "#cccccc";
+  document.getElementById("b1").style.borderColor = "#cccccc";
+  document.getElementById("b1").style.textAlign = "center";
+  document.getElementById("b2").style.margin = "10px";
+  document.getElementById("b2").style.borderRadius = "10px";
+  document.getElementById("b2").style.backgroundColor = "#cccccc";
+  document.getElementById("b2").style.borderColor = "#cccccc";
+  document.getElementById("b2").style.textAlign = "center";
+  setBtn();
   for(i = 0; i < buildingsUnlocked.length; i ++){
     buildingsUnlockedImgs[i] = new Image();
     buildingsUnlockedImgs[i].src = "assets/grey mine.svg";
@@ -175,65 +322,41 @@ function start() {
       extractorsUnlockedImgs[i].src = "assets/grey pump.svg";
     }
   }
+  generateWorld();
 }
 
 start();
 
 function mm(e) {
-  var x = e.clientX, y = e.clientY;
+  x = e.clientX, y = e.clientY;
   bx = Math.floor((x-ox)/gs), by = Math.floor((y-oy)/gs);
   ocx = x-ox, ocy = y-oy;
-  var cor = "Coordinates: (" + x + "," + y + ")" + "  Coordinates Offset: (" + ocx + "," + ocy + ")" + " Box Coordinates: (" + bx + "," + by + ")" + " Clicked Coordinates: (" + cx + "," + cy + ")"  + " Bounds 1 Coordinates: (X:" + selBounds[0][0] + "," + selBounds[0][1] + " Y:" + selBounds[0][2] + "," + selBounds[0][3] + ")"  + " Bounds 2 Coordinates: (X:" + selBounds[1][0] + "," + selBounds[1][1] + " Y:" + selBounds[1][2] + "," + selBounds[1][3] + ")";
-  document.getElementById("cor").innerHTML = cor;
-  document.getElementById("money").innerHTML = "money:$" + money;
-  document.getElementById("debug2").innerHTML = extractorsUnlockedImgs;
-  hovered = checkSpace(bx,by);
-  if(hoveredNode == false){
-    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? placedObjects[curBuld].name : " ")+ " X: " + (hovered == true ? placedObjects[curBuld].xLoc : 0) + " Y: " + (hovered == true ? placedObjects[curBuld].yLoc : 0) + " clicked dir: " + clickedDir;
-  }else{
-    document.getElementById("debug").innerHTML = "hovering: " + hovered + " object: " + (hovered == true ? nodes[curBuld].name : " ") + " X: " + (hovered == true ? nodes[curBuld].xLoc : 0) + " Y: " + (hovered == true ? nodes[curBuld].yLoc : 0 + " clicked dir: " + clickedDir);
-  }
-  if(clicked == false) {
-    if(hoveredNode == false){
-      drawGrid(bx,by);
-    }else if(hoveredNode == true){
-      clear();
-      if(nodes[curBuld].type == "mine"){
-        ctx.drawImage(extractorsUnlockedImgs[extractorsUnlocked.includes("mine")],bx*gs,by*gs,gs,gs);  
-      }else if(nodes[curBuld].type == "pump"){
-        ctx.drawImage(extractorsUnlockedImgs[extractorsUnlocked.includes("pump")],bx*gs,by*gs,gs,gs);  
-      }
-    }
-    //clearTimeout(timeout);
-    //timeout = setTimeout(function(){clear();}, 1000);
-  }
 }
 
 function mc() {
   clear();
-  if (checkSpace(bx,by) == true && hoveredNode == false && mode == "place") {
+  if (checkSpace(bx,by,false) == true && hoveredNode == false && mode == "place") {
     var curTier=placedObjects[curBuld].tier;
     if(money >= 10 && curTier <  3){
       placedObjects[curBuld].tier = curTier + 1;
       placedObjects[curBuld].update();
     }
-  }else if (mode == "place" && checkSpace(bx,by) == true && hoveredNode == true) {
-    document.getElementById("debug2").innerHTML = "1";
-    if(nodes[curBuld].type == "mine" && extractorsUnlocked.includes("mine") == true) {
-      document.getElementById("debug2").innerHTML = "2";
+  }else if (mode == "place" && checkSpace(bx,by,false) == true && hoveredNode == true) {
+    len = placedObjects.length;
+    if(nodes[curBuld].type == "mine" && extractorsUnlocked.includes("mine") == true && selObject == "mine") {
       placedObjects[len] = new Mine();
-    }else if(nodes[curBuld].type == "pump" && extractorsUnlocked.includes("pump") == true){
-      document.getElementById("debug2").innerHTML = "22";
+    }else if(nodes[curBuld].type == "pump" && extractorsUnlocked.includes("pump") == true && selObject == "pump"){
       placedObjects[len] = new Pump();
     }
-    document.getElementById("debug2").innerHTML = "3";
     placedObjects[len].xLoc = bx;
     placedObjects[len].yLoc = by;
     placedObjects[len].rot = plcRot;
+    placedObjects[len].node = curBuld;
+    placedObjects[len].color = nodes[curBuld].color;
+    placedObjects[len].colorUp();
     placedObjects[len].imgUp();
     placedObjects[len].update();
-    document.getElementById("debug2").innerHTML = "4";
-  }else if(mode == "place" && checkSpace(bx,by) == false && hoveredNode == false){
+  }else if(mode == "place" && checkSpace(bx,by,false) == false && hoveredNode == false){
     cx = bx, cy = by;
     hoveredBuld="";
   }else if (mode == "place") {
@@ -243,19 +366,23 @@ function mc() {
     placedObjects[len].rot = plcRot;
     placedObjects[len].imgUp();
     placedObjects[len].update();
-  } else if (checkSpace(cx,cy) == true && mode == "erase") {
+  } else if (checkSpace(cx,cy,false) == true && mode == "erase") {
     delete placedObjects[curBuld];
   }
 }
 
-function checkSpace(inX,inY) {
+function checkSpace(inX,inY,object) {
   if(placedObjects.length != 0){
     for(i = 0; i < placedObjects.length; i++) {
       if(placedObjects[i] != undefined) {
         if(placedObjects[i].xLoc == inX && placedObjects[i].yLoc == inY) {
           curBuld=i;
           hoveredNode=false;
-          return true;
+          if(object == false){
+            return true;
+          }else{
+            return i;
+          }
         }
       }
     }
@@ -266,7 +393,11 @@ function checkSpace(inX,inY) {
         if(nodes[i].xLoc == inX && nodes[i].yLoc == inY) {
           curBuld=i;
           hoveredNode=true;
-          return true;
+          if(object == false){
+            return true;
+          }else{
+            return i;
+          }
         }
       }
     }
@@ -345,14 +476,50 @@ function drawImage(image, x, y, scale, rotation){
 } 
 
 function generateWorld() {
-  len = nodes.length;
-  var gwx = Math.floor(Math.random() * (gxs - 0) + 0);
-  var gwy = Math.floor(Math.random() * (gys - 0) + 0);
-  nodes[len] = new Iron();
-  nodes[len].xLoc = gwx;
-  nodes[len].yLoc = gwy;
+  for(i = 0; i < solidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Iron();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < solidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Copper();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < solidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Limestone();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < solidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Quarts();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
   clear();
 }
 
-function setbuld(btn){
+function selBuld(btn){
+  selObject = selBuldOrder[btn-1];
+  document.getElementById("building").innerHTML = selObject;
+}
+
+function setBtn(){
+  btn = "";
+  for(i = 1; i <= 14; i++){
+    btn = "buld" + i.toString();
+    document.getElementById(btn).innerHTML = selBuldOrder[i-1];
+  }
 }
