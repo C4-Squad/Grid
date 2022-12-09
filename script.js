@@ -36,7 +36,7 @@ purple #B26CB2 + quarts - nitrogen
 function Iron() {
   this.id = "iron";
   this.type = "mine";
-  this.colorVal = "#55B3B4";
+  this.colorVal = "#3E8C8E";
   this.color = "blue";
   this.output = 10; //per second
   this.offset1 = 0;
@@ -46,7 +46,7 @@ function Iron() {
   this.tier = 1;
   this.level = 2;
   this.name = "level " + this.level + " " + this.id + " node";
-  this.update = function() {
+  this.update = function(){
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
@@ -54,7 +54,7 @@ function Iron() {
 function Copper() {
   this.id = "copper";
   this.type = "mine";
-  this.colorVal = "#E53838";
+  this.colorVal = "#E32626";
   this.color = "red";
   this.output = 10; //per second
   this.offset1 = 0;
@@ -64,7 +64,7 @@ function Copper() {
   this.tier = 1;
   this.level = 2;
   this.name = "level " + this.level + " " + this.id + " node";
-  this.update = function() {
+  this.update = function(){
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
@@ -72,7 +72,7 @@ function Copper() {
 function Limestone() {
   this.id = "limestone";
   this.type = "mine";
-  this.colorVal = "#F6B128";
+  this.colorVal = "#F5AA14";
   this.color = "yellow";
   this.output = 10; //per second
   this.offset1 = 0;
@@ -82,7 +82,7 @@ function Limestone() {
   this.tier = 2;
   this.level = 2;
   this.name = "level " + this.level + " " + this.id + " node";
-  this.update = function() {
+  this.update = function(){
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
@@ -90,7 +90,7 @@ function Limestone() {
 function Quarts() {
   this.id = "quarts";
   this.type = "mine";
-  this.colorVal = "#B26CB2";
+  this.colorVal = "#AB5FAB";
   this.color = "purple";
   this.output = 10; //per second
   this.offset1 = 0;
@@ -100,7 +100,7 @@ function Quarts() {
   this.tier = 3;
   this.level = 2;
   this.name = "level " + this.level + " " + this.id + " node";
-  this.update = function() {
+  this.update = function(){
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
@@ -119,8 +119,9 @@ function Mine() {
   this.tier = 1;
   this.node = 0;
   this.working = false;
+  this.output = this.rot / 90 //0 = right 1 = down 2 = left 3 = up
   this.name = "tier " + this.tier + " " + this.color + " " + this.id;
-  this.colorUp = function() {
+  this.colorUp = function(){
     this.imgdc = "assets/" + this.color + " mine dc.svg";
     this.imgdc = "assets/" + this.color + " mine.svg";
   },
@@ -131,9 +132,17 @@ function Mine() {
       this.img.src = this.imgdc;
     }
   },
-  this.update = function() {
-    if(nodes[this.node].tier <= this.tier){
+  this.update = function(){
+    if(nodes[this.node].tier <= this.tier && this.connected == true){
       this.running = true;
+    }
+    if(checkSpace(this.outputX,this.outputY,false) == true){
+      if(placedObjects[checkSpace(this.outputX,this.outputY,true)].id == "conveyor"){
+        this.output = checkSpace(this.outputX,this.outputY,true);
+        this.connected = true;
+      }else{
+        this.connected = false;
+      }
     }
     this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
     drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
@@ -152,8 +161,11 @@ function Pump() {
   this.tier = 1;
   this.node = 0;
   this.running = false;
+  this.output = 0;
+  this.outputX = 0;
+  this.outputY = 0;
   this.name = "tier " + this.tier + " " + this.color + " " + this.id;
-  this.colorUp = function() {
+  this.colorUp = function(){
     this.imgdc = "assets/" + this.color + " pump dc.svg";
     this.imgdc = "assets/" + this.color + " pump.svg";
   },
@@ -164,26 +176,114 @@ function Pump() {
       this.img.src = this.imgdc;
     }
   },
-  this.update = function() {
+  this.update = function(){
     if(nodes[this.node].tier <= this.tier){
       this.running = true;
+    }
+    if(placedObjects[checkSpace(this.outputX,this.outputY,true)].id == "Pipe"){
+      this.output = checkSpace(this.outputX,this.outputY,true);
+      this.connected = true;
     }
     this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
     drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
   }
 }
+//transportation
+function Conveyor() {
+  this.id = "conveyor";
+  this.type = "mine";
+  this.imgo = "assets/conveyor o.svg"; // dc mid
+  this.imgi = "assets/conveyor i.svg"; // c edge
+  this.imgm = "assets/conveyor m.svg"; // c mid
+  this.imgl = "assets/conveyor l.svg"; // c line
+  this.img = new Image();
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.shape = "o" // o is dot - l is strait - r is turn - t is split 3 ways - x is split 4 ways
+  this.connected1 = false; // rot 0
+  this.connected1id = 0;
+  this.connected1X = 0;
+  this.connected1Y = 0;
+  this.connected2 = false; // rot 90
+  this.connected2id = 0;
+  this.connected2X = 0;
+  this.connected2Y = 0;
+  this.connected3 = false; // rot 180
+  this.connected3id = 0;
+  this.connected3X = 0;
+  this.connected3Y = 0;
+  this.connected4 = false; // rot 270
+  this.connected4id = 0;
+  this.connected4X = 0;
+  this.connected4Y = 0;
+  this.name = this.id + " Connected side 1: " + this.connected1 + " Connected side 2: " + this.connected2 + " Connected side 3: " + this.connected3 + " Connected side 4: " + this.connected4  + " Shape: " + this.shape;
+  this.sideSetup = function(){
+    this.connected1X = sideCords(this.xLoc,this.yLoc,0,false);
+    this.connected1Y = sideCords(this.xLoc,this.yLoc,0,true);
+    this.connected2X = sideCords(this.xLoc,this.yLoc,90,false);
+    this.connected2Y = sideCords(this.xLoc,this.yLoc,90,true);    
+    this.connected3X = sideCords(this.xLoc,this.yLoc,180,false);
+    this.connected3Y = sideCords(this.xLoc,this.yLoc,180,true);
+    this.connected4X = sideCords(this.xLoc,this.yLoc,270,false);
+    this.connected4Y = sideCords(this.xLoc,this.yLoc,270,true);
+    this.checkConnections();
+  },
+  this.imgUp = function(){
+  },
+  this.checkConnections = function(){
+    if(checkSpace(this.connected1X,this.connected1Y,false) == true){
+      if(placedObjects[checkSpace(this.connected1X,this.connected1Y,true)].type == "mine"){
+        this.connected1id = checkSpace(this.connected1X,this.connected1Y,true);
+        this.connected1 = true;
+      }else{
+        this.connected1 = false;
+      }
+    }
+    if(checkSpace(this.connected2X,this.connected2Y,false) == true){
+      if(placedObjects[checkSpace(this.connected2X,this.connected2Y,true)].type == "mine"){
+        this.connected2id = checkSpace(this.connected2X,this.connected2Y,true);
+        this.connected2 = true;
+      }else{
+        this.connected2 = false;
+      }
+    }
+    if(checkSpace(this.connected3X,this.connected3Y,false) == true){
+      if(placedObjects[checkSpace(this.connected3X,this.connected3Y,true)].type == "mine"){
+        this.connected3id = checkSpace(this.connected3X,this.connected3Y,true);
+        this.connected3 = true;
+      }else{
+        this.connected3 = false;
+      }
+    }
+    if(checkSpace(this.connected4X,this.connected4Y,false) == true){
+      if(placedObjects[checkSpace(this.connected4X,this.connected4Y,true)].type == "mine"){
+        this.connected4id = checkSpace(this.connected4X,this.connected4Y,true);
+        this.connected4 = true;
+      }else{
+        this.connected4 = false;
+      }
+    }
+    if((this.connected1 == true && this.connected3 == true) || (this.connected2 == true && this.connected4 == true)){
+      
+    }
+  },
+  this.update = function(){
+    this.name = this.id + " Connected side 1: " + this.connected1 + " Connected side 2: " + this.connected2 + " Connected side 3: " + this.connected3 + " Connected side 4: " + this.connected4  + " Shape: " + this.shape;
+    this.imgUp();
+  }
+}
 //vars
 var i=0;
 var money=100;
-var gs=15;
+var gs=20;
 var gxs=40, gys=20;
-var ox=9, oy=49;
+var ox=9, oy=59;
 var ocx=0, ocy=0;
 var x=0, y=0;
 var gwx=0, gwy=0;
 var o=0
 var cxs=gxs*gs, cys=gys*gs;
-var imgScale=gs/50;
+var imgScale=gs/75;
 var bx=0, by=0;
 var cx=0, cy=0;
 var plcRot=0;
@@ -196,11 +296,8 @@ var curBuld=0;
 var clickedDir=0;//1-top 2-top left 3-left 4-bottom left 5-bottom 6-bottom right 7-right 8-top right
 var extractorsUnlocked = ["mine","pump"];
 var extractorsUnlockedImgs = [];
-var buildingsUnlocked = ["smelter","fabricator"];
+var buildingsUnlocked = ["conveyor","pipe"];
 var buildingsUnlockedImgs = [];
-var buildingsColored = [[],[],[],[],[]];//1-blue 2-red 3-yellow 4-purple 5-grey| 1-mine dc 2-mine c 3-pump dc 4-pump dc
-var buildingsConnectedImgs = [];//mine and pump are blank
-var buildingsDisconnectedImgs = [];//mine and pump are blank
 var extractors = ["mine","pump"];
 var buildings = ["conveyor","pipe","smelter","fabricator","filter","mixer","small storage","large storage","small tank","large tank","hub"];
 var selBuldOrder = ["conveyor","mine","smelter","fabricator","small storage","large storage","constructor","pipe","pump","filter","mixer","small tank","large tank","hub"]
@@ -210,7 +307,7 @@ var solidNodes = 2;
 var liquidNodes = 2;
 var nodes = [];
 var cor;
-var debug = false;
+var debug = true;
 btn = "";
 var showGrid = true;
 
@@ -271,7 +368,7 @@ function gameLoopF(timeStamp){
 function start() {
   if(debug == true){
     ox=9;
-    oy=174;
+    oy=184;
   }else{
     document.getElementById("cor").style.display = "none";
     document.getElementById("debug").style.display = "none";
@@ -351,22 +448,25 @@ function mc() {
     placedObjects[len].xLoc = bx;
     placedObjects[len].yLoc = by;
     placedObjects[len].rot = plcRot;
+    placedObjects[len].outputX = sideCords(bx,by,plcRot,false);
+    placedObjects[len].outputY = sideCords(bx,by,plcRot,true);
     placedObjects[len].node = curBuld;
     placedObjects[len].color = nodes[curBuld].color;
     placedObjects[len].colorUp();
     placedObjects[len].imgUp();
     placedObjects[len].update();
   }else if(mode == "place" && checkSpace(bx,by,false) == false && hoveredNode == false){
-    cx = bx, cy = by;
-    hoveredBuld="";
-  }else if (mode == "place") {
     let len = placedObjects.length;
-    placedObjects[len].xLoc = bx;
-    placedObjects[len].yLoc = bx;
-    placedObjects[len].rot = plcRot;
-    placedObjects[len].imgUp();
-    placedObjects[len].update();
-  } else if (checkSpace(cx,cy,false) == true && mode == "erase") {
+    if(selObject == "conveyor"){
+      placedObjects[len] = new Conveyor;
+      placedObjects[len].xLoc = bx;
+      placedObjects[len].yLoc = by;
+      placedObjects[len].sideSetup();
+      placedObjects[len].imgUp();
+      placedObjects[len].update();
+    }
+    
+  } else if (checkSpace(bx,by,false) == true && mode == "erase") {
     delete placedObjects[curBuld];
   }
 }
@@ -403,7 +503,11 @@ function checkSpace(inX,inY,object) {
     }
   }
   hoveredNode=false;
-  return false;
+  if(object == true){
+    return 0;
+  }else{
+    return false;
+  }
 }
 
 function clear() {
@@ -420,31 +524,51 @@ function updateObjs(item) {
   item.update();
 }
 
-function drawGrid(x,y){
+function drawGrid(inX,inY){
   clear();
   ctx.beginPath();
-  ctx.moveTo((x)*gs, (y-0.5)*gs);
-  ctx.lineTo((x)*gs, (y+1.5)*gs);
-  ctx.moveTo((x+1)*gs, (y-0.5)*gs);
-  ctx.lineTo((x+1)*gs, (y+1.5)*gs);
-  ctx.moveTo((x-0.5)*gs, y*gs);
-  ctx.lineTo((x+1.5)*gs, y*gs);
-  ctx.moveTo((x-0.5)*gs, (y+1)*gs);
-  ctx.lineTo((x+1.5)*gs, (y+1)*gs);
+  ctx.moveTo((inX)*gs, (inY-0.5)*gs);
+  ctx.lineTo((inX)*gs, (inY+1.5)*gs);
+  ctx.moveTo((inX+1)*gs, (inY-0.5)*gs);
+  ctx.lineTo((inX+1)*gs, (inY+1.5)*gs);
+  ctx.moveTo((inX-0.5)*gs, inY*gs);
+  ctx.lineTo((inX+1.5)*gs, inY*gs);
+  ctx.moveTo((inX-0.5)*gs, (inY+1)*gs);
+  ctx.lineTo((inX+1.5)*gs, (inY+1)*gs);
   ctx.strokeStyle = "#00000050";
   ctx.stroke();
   ctx.beginPath();
-  ctx.arc((x+0.5)*gs, (y+0.5)*gs, gs/2-5, 0, 2 * Math.PI);
+  ctx.arc((inX+0.5)*gs, (inY+0.5)*gs, gs/2-5, 0, 2 * Math.PI);
   ctx.fillStyle = "#00000050";
   ctx.fill();
 }
 
-function distB(y){
-  return gys - y;
-}
-
-function distR(x){
-  return gxs - x;
+function sideCords(inX,inY,rot,y){
+  if(rot == 0){
+    if(y == false){
+      return inX + 1;
+    }else{
+      return inY;
+    }
+  }else if(rot == 90){
+    if(y == false){
+      return inX;
+    }else{
+      return inY + 1;
+    }
+  }else if(rot == 180){
+    if(y == false){
+      return inX - 1;
+    }else{
+      return inY;
+    }
+  }else if(rot == 270){
+    if(y == false){
+      return inX;
+    }else{
+      return inY - 1;
+    }
+  }
 }
 
 function rgbToHex(r, g, b) {
@@ -473,7 +597,7 @@ function drawImage(image, x, y, scale, rotation){
   ctx.rotate(rotation * (Math.PI/180));
   ctx.drawImage(image, -image.width / 2, -image.height / 2);
   ctx.setTransform(1,0,0,1,0,0);
-} 
+}
 
 function generateWorld() {
   for(i = 0; i < solidNodes; i++){
