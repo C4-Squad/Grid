@@ -4,7 +4,22 @@
 <desc>Created with Fabric.js 4.6.0</desc>
 <defs>
 </defs>
-<g transform="matrix(0 4.6 -0.6 0 30 50)" id="qGwiZvmG53UqP-6zTFnYp"  >
+<g transform="matrix(1 0 0 1.75 50 35)" id="ay9bCPbqcYtrUpxPslafl"  >
+<path style="stroke: rgb(180,41,68); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(47,65,75); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -20 -20 L 20 -20 L 20 20 L -20 20 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(4.6 0 0 0.6 50 70)" id="3oUFBNnLvED7v8QzFJvLV"  >
+<path style="stroke: rgb(75,167,170); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(63,87,100); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -5 -1.46447 C -5 -3.41709 -4.80292 -5 -4.55982 -5 L 4.559810000000001 -5 L 4.559810000000001 -5 C 4.80292 -5 4.99999 -3.41709 4.99999 -1.46447 L 4.99999 1.4644599999999999 L 4.99999 1.4644599999999999 C 4.99999 3.41708 4.802910000000001 4.99999 4.559810000000001 4.99999 L -4.55982 4.99999 L -4.55982 4.99999 C -4.80293 4.99999 -5 3.4170800000000003 -5 1.4644600000000003 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(0 7.6 -0.6 0 70 34.98)" id="86Lw5KILHYRKAf-722R10"  >
+<path style="stroke: rgb(75,167,170); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(63,87,100); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -5 -1.46446 C -5 -3.4170800000000003 -4.87497 -4.99999 -4.72073 -4.99999 L 4.72073 -4.99999 L 4.72073 -4.99999 C 4.874969999999999 -4.99999 5 -3.4170800000000003 5 -1.4644600000000003 L 5 1.4644699999999995 L 5 1.4644699999999995 C 5 3.4170899999999995 4.87497 5 4.72073 5 L -4.72073 5 L -4.72073 5 C -4.874969999999999 5 -5 3.41709 -5 1.46447 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(0 7.6 -0.6 0 30 34.98)" id="51AwIR4XbceJ-Jfbk4Gqr"  >
+<path style="stroke: rgb(75,167,170); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(63,87,100); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -5 -1.46447 C -5 -3.41709 -4.87497 -5 -4.72073 -5 L 4.72073 -5 L 4.72073 -5 C 4.874969999999999 -5 5 -3.41709 5 -1.46447 L 5 1.46447 L 5 1.46447 C 5 3.41709 4.87497 5 4.72073 5 L -4.72073 5 L -4.72073 5 C -4.874969999999999 5 -5 3.41709 -5 1.46447 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(4.6 0 0 0.6 50 70)" id="3oUFBNnLvED7v8QzFJvLV"  >
+<path style="stroke: rgb(75,167,170); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(63,87,100); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -5 -1.46447 C -5 -3.41709 -4.80292 -5 -4.55982 -5 L 4.559810000000001 -5 L 4.559810000000001 -5 C 4.80292 -5 4.99999 -3.41709 4.99999 -1.46447 L 4.99999 1.4644599999999999 L 4.99999 1.4644599999999999 C 4.99999 3.41708 4.802910000000001 4.99999 4.559810000000001 4.99999 L -4.55982 4.99999 L -4.55982 4.99999 C -4.80293 4.99999 -5 3.4170800000000003 -5 1.4644600000000003 z" stroke-linecap="round" />
+</g>
+<g transform="matrix(4.6 0 0 0.6 50 70)" id="3oUFBNnLvED7v8QzFJvLV"  >
 <path style="stroke: rgb(75,167,170); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(63,87,100); fill-rule: nonzero; opacity: 1;" vector-effect="non-scaling-stroke"  transform=" translate(0, 0)" d="M -5 -1.46447 C -5 -3.41709 -4.80292 -5 -4.55982 -5 L 4.559810000000001 -5 L 4.559810000000001 -5 C 4.80292 -5 4.99999 -3.41709 4.99999 -1.46447 L 4.99999 1.4644599999999999 L 4.99999 1.4644599999999999 C 4.99999 3.41708 4.802910000000001 4.99999 4.559810000000001 4.99999 L -4.55982 4.99999 L -4.55982 4.99999 C -4.80293 4.99999 -5 3.4170800000000003 -5 1.4644600000000003 z" stroke-linecap="round" />
 </g>
 </svg>
