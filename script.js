@@ -97,12 +97,12 @@ function NullExtractor() {
 function Iron() {
   this.id = "iron";
   this.type = "mine";
-  this.colorVal = "#3E8C8E";
+  this.colorVal = "#387D80";
   this.color = "blue";
   this.isNode = true;
   this.output = 10; //per second
-  this.offset1 = 0;
-  this.offset2 = 1;
+  this.offset1 = -0.2;
+  this.offset2 = 0.6;
   this.xLoc = 0;
   this.yLoc = 0;
   this.tier = 1;
@@ -112,16 +112,16 @@ function Iron() {
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
-}
+};
 function Copper() {
   this.id = "copper";
   this.type = "mine";
-  this.colorVal = "#E32626";
+  this.colorVal = "#D91C1C";
   this.color = "red";
   this.isNode = true;
   this.output = 10; //per second
-  this.offset1 = 0;
-  this.offset2 = 1;
+  this.offset1 = -0.2;
+  this.offset2 = 0.6;
   this.xLoc = 0;
   this.yLoc = 0;
   this.tier = 1;
@@ -131,16 +131,16 @@ function Copper() {
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
-}
+};
 function Limestone() {
   this.id = "limestone";
   this.type = "mine";
-  this.colorVal = "#F5AA14";
+  this.colorVal = "#EBA00A";
   this.color = "yellow";
   this.isNode = true;
   this.output = 10; //per second
-  this.offset1 = 0;
-  this.offset2 = 1;
+  this.offset1 = -0.2;
+  this.offset2 = 0.6;
   this.xLoc = 0;
   this.yLoc = 0;
   this.tier = 2;
@@ -150,16 +150,16 @@ function Limestone() {
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
-}
+};
 function Quarts() {
   this.id = "quarts";
   this.type = "mine";
-  this.colorVal = "#AB5FAB";
+  this.colorVal = "#A054A0";
   this.color = "purple";
   this.isNode = true;
   this.output = 10; //per second
-  this.offset1 = 0;
-  this.offset2 = 1;
+  this.offset1 = -0.2;
+  this.offset2 = 0.6;
   this.xLoc = 0;
   this.yLoc = 0;
   this.tier = 3;
@@ -169,7 +169,92 @@ function Quarts() {
     ctx.fillStyle = this.colorVal;
     ctx.fillRect((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset1)*gs, (this.offset2)*gs, (this.offset2)*gs);
   }
-}
+};
+
+function Water() {
+  this.id = "water";
+  this.type = "pump";
+  this.colorVal = "#387D80";
+  this.color = "blue";
+  this.isNode = true;
+  this.output = 10; //per second
+  this.offset1 = -0.5;
+  this.offset2 = -0.5;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 1;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function(){
+    ctx.fillStyle = this.colorVal;
+    ctx.beginPath();
+    ctx.arc((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset2)*gs, gs/2.5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+};
+function Oil() {
+  this.id = "oil";
+  this.type = "pump";
+  this.colorVal = "#D91C1C";
+  this.color = "red";
+  this.isNode = true;
+  this.output = 10; //per second
+  this.offset1 = -0.5;
+  this.offset2 = -0.5;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 1;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function(){
+    ctx.fillStyle = this.colorVal;
+    ctx.beginPath();
+    ctx.arc((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset2)*gs, gs/2.5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+};
+function Petroleum() {
+  this.id = "petroleum";
+  this.type = "pump";
+  this.colorVal = "#EBA00A";
+  this.color = "yellow";
+  this.isNode = true;
+  this.output = 10; //per second
+  this.offset1 = -0.5;
+  this.offset2 = -0.5;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 2;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function(){
+    ctx.fillStyle = this.colorVal;
+    ctx.beginPath();
+    ctx.arc((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset2)*gs, gs/2.5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+};
+function Nitrogen() {
+  this.id = "nitrogen";
+  this.type = "pump";
+  this.colorVal = "#A054A0";
+  this.color = "purple";
+  this.isNode = true;
+  this.output = 10; //per second
+  this.offset1 = -0.5;
+  this.offset2 = -0.5;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.tier = 3;
+  this.level = 2;
+  this.name = "level " + this.level + " " + this.id + " node";
+  this.update = function(){
+    ctx.fillStyle = this.colorVal;
+    ctx.beginPath();
+    ctx.arc((this.xLoc-this.offset1)*gs, (this.yLoc-this.offset2)*gs, gs/2.5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+};
 //buildings
 function Mine() {
   this.id = "mine";
@@ -223,13 +308,13 @@ function Mine() {
       this.running = true;
     }
     this.checkConnections();
-    if(this.preRunning != this.running || this.preConnected != this.connected){
-      this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
-      drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
-    }else if(overide == true){
-      this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
-      drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
-    }
+    //if(this.preRunning != this.running || this.preConnected != this.connected){
+    this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
+    drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
+    //}else if(overide == true){
+      //this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
+      //drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
+    //}
   }
 };
 function Pump() {
@@ -284,13 +369,13 @@ function Pump() {
       this.running = true;
     }
     this.checkConnections();
-    if(this.preRunning != this.running || this.preConnected != this.connected){
-      this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
-      drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
-    }else if(overide == true){
-      this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
-      drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
-    }
+    //if(this.preRunning != this.running || this.preConnected != this.connected){
+    this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
+    drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
+    //}else if(overide == true){
+      //this.name = (this.running == true ? "running " : "not running ") + "tier " + this.tier + " " + this.color + " " + this.id;
+      //drawImage(this.img, this.xLoc, this.yLoc, imgScale, this.rot);
+    //}
   }
 };
 //transportation
@@ -492,19 +577,219 @@ function Conveyor() {
       this.imgUp();
     }
   }
-}
+};
+
+function Pipe() {
+  this.id = "pipe";
+  this.type = "pump";
+  this.imgso = "assets/pipe m.svg"; // dc
+  this.imgsi = "assets/pipe i.svg"; // strait dc
+  this.imgsl = "assets/pipe l.svg"; // strait
+  this.imgsr = "assets/pipe r.svg"; // turn
+  this.imgst = "assets/pipe t.svg"; // t crossing
+  this.imgsx = "assets/pipe x.svg"; // x crossing
+  this.imgo = new Image();
+  this.imgi = new Image();
+  this.imgl = new Image();
+  this.imgr = new Image();
+  this.imgt = new Image();
+  this.imgx = new Image();
+  this.isNode = false;
+  this.xLoc = 0;
+  this.yLoc = 0;
+  this.rot = 0;
+  this.preShape = "q";
+  this.shape = "e"; // o is dot - i is strait not compleated - l is strait - r is turn - t is split 3 ways - x is split 4 ways
+  this.connected1 = false; // rot 0 - right
+  this.connected1out = false;
+  this.connected1id = 0;
+  this.connected1X = 0;
+  this.connected1Y = 0;
+  this.connected2 = false; // rot 90 - down
+  this.connected2out = false;
+  this.connected2id = 0;
+  this.connected2X = 0;
+  this.connected2Y = 0;
+  this.connected3 = false; // rot 180 - left
+  this.connected3out = false;
+  this.connected3id = 0;
+  this.connected3X = 0;
+  this.connected3Y = 0;
+  this.connected4 = false; // rot 270 - up
+  this.connected4out = false;
+  this.connected4id = 0;
+  this.connected4X = 0;
+  this.connected4Y = 0;
+  this.name = this.id + " Connected side 1: " + this.connected1 + " Connected side 2: " + this.connected2 + " Connected side 3: " + this.connected3 + " Connected side 4: " + this.connected4  + " Shape: " + this.shape;
+  this.sideSetup = function(){
+    this.connected1X = sideCords(this.xLoc,this.yLoc,0,false);
+    this.connected1Y = sideCords(this.xLoc,this.yLoc,0,true);
+    this.connected2X = sideCords(this.xLoc,this.yLoc,90,false);
+    this.connected2Y = sideCords(this.xLoc,this.yLoc,90,true);    
+    this.connected3X = sideCords(this.xLoc,this.yLoc,180,false);
+    this.connected3Y = sideCords(this.xLoc,this.yLoc,180,true);
+    this.connected4X = sideCords(this.xLoc,this.yLoc,270,false);
+    this.connected4Y = sideCords(this.xLoc,this.yLoc,270,true);
+    this.checkConnections();
+    this.checkOutputs();
+  },
+  this.imgUp = function(){
+    if(this.shape == "x"){
+      this.imgx.src = this.imgsx;
+      drawImage(this.imgx,this.xLoc,this.yLoc,imgScale,this.rot);
+    }else if(this.shape == "t"){
+      this.imgt.src = this.imgst;
+      drawImage(this.imgt,this.xLoc,this.yLoc,imgScale,this.rot);
+    }else if(this.shape == "r"){
+      this.imgr.src = this.imgsr;
+      drawImage(this.imgr,this.xLoc,this.yLoc,imgScale,this.rot);
+    }else if(this.shape == "l"){
+      this.imgl.src = this.imgsl;
+      drawImage(this.imgl,this.xLoc,this.yLoc,imgScale,this.rot);
+    }else if(this.shape == "i"){
+      this.imgi.src = this.imgsi;
+      drawImage(this.imgi,this.xLoc,this.yLoc,imgScale,this.rot);
+    }else if(this.shape == "o"){
+      this.imgo.src = this.imgso;
+      drawImage(this.imgo,this.xLoc,this.yLoc,imgScale,this.rot);
+    }
+  },
+  this.checkOutputs = function(){
+    if(placedObjects[this.connected1id].id == "pump"){
+      this.connected1out = true;
+    }else{
+      this.connected1out = false;
+    }
+  }
+  this.checkConnections = function(){
+    if(checkSpace(this.connected1X,this.connected1Y,false) == true){
+      if(placedObjects[checkSpace(this.connected1X,this.connected1Y,true)].type == "pump"){
+        if(hoveredNode == false){
+          this.connected1id = checkSpace(this.connected1X,this.connected1Y,true);
+          if(placedObjects[this.connected1id].id == "pipe"){
+            this.connected1 = true;
+          }else if(placedObjects[this.connected1id].connectedX == this.xLoc && placedObjects[this.connected1id].connectedY == this.yLoc){
+            this.connected1 = true;
+          }
+        }
+      }else{
+        this.connected1 = false;
+      }
+    }
+    if(checkSpace(this.connected2X,this.connected2Y,false) == true){
+      if(placedObjects[checkSpace(this.connected2X,this.connected2Y,true)].type == "pump"){
+        if(hoveredNode == false){
+          this.connected2id = checkSpace(this.connected2X,this.connected2Y,true);
+          if(placedObjects[this.connected2id].id == "pipe"){
+            this.connected2 = true;
+          }else if(placedObjects[this.connected2id].connectedX == this.xLoc && placedObjects[this.connected2id].connectedY == this.yLoc){
+            this.connected2 = true;
+          }
+        }
+      }else{
+        this.connected2 = false;
+      }
+    }
+    if(checkSpace(this.connected3X,this.connected3Y,false) == true){
+      if(placedObjects[checkSpace(this.connected3X,this.connected3Y,true)].type == "pump"){
+        if(hoveredNode == false){
+          this.connected3id = checkSpace(this.connected3X,this.connected3Y,true);
+          if(placedObjects[this.connected3id].id == "pipe"){
+            this.connected3 = true;
+          }else if(placedObjects[this.connected3id].connectedX == this.xLoc && placedObjects[this.connected3id].connectedY == this.yLoc){
+            this.connected3 = true;
+          }
+        }
+      }else{
+        this.connected3 = false;
+      }
+    }
+    if(checkSpace(this.connected4X,this.connected4Y,false) == true){
+      if(placedObjects[checkSpace(this.connected4X,this.connected4Y,true)].type == "pump"){
+        if(hoveredNode == false){
+          this.connected4id = checkSpace(this.connected4X,this.connected4Y,true);
+          if(placedObjects[this.connected4id].id == "pipe"){
+            this.connected4 = true;
+          }else if(placedObjects[this.connected4id].connectedX == this.xLoc && placedObjects[this.connected4id].connectedY == this.yLoc){
+            this.connected4 = true;
+          }
+        }
+      }else{
+        this.connected4 = false;
+      }
+    }
+    if(this.connected1 == true && this.connected2 == true && this.connected3 == true && this.connected4 == true){
+      this.shape = "x";
+      this.rot = 0;
+    }else if((this.connected1 == true && this.connected2 == true && this.connected3 == true) || (this.connected2 == true && this.connected3 == true && this.connected4 == true) || (this.connected3 == true && this.connected4 == true && this.connected1 == true) || (this.connected4 == true && this.connected1 == true && this.connected2 == true)){
+      this.shape = "t";
+      if(this.connected1 == true && this.connected2 == true && this.connected3 == true){
+        this.rot = 180;
+      }else if(this.connected2 == true && this.connected3 == true && this.connected4 == true){
+        this.rot = 270;
+      }else if(this.connected3 == true && this.connected4 == true && this.connected1 == true){
+        this.rot = 0;
+      }else if(this.connected4 == true && this.connected1 == true && this.connected2 == true){
+        this.rot = 90;
+      }
+    }else if((this.connected1 == true && this.connected2 == true) || (this.connected2 == true && this.connected3 == true) || (this.connected3 == true && this.connected4 == true) || (this.connected4 == true && this.connected1 == true)){
+      this.shape = "r"
+      if(this.connected1 == true && this.connected2 == true){
+        this.rot = 90;
+      }else if(this.connected2 == true && this.connected3 == true){
+        this.rot = 180;
+      }else if(this.connected3 == true && this.connected4 == true){
+        this.rot = 270;
+      }else if(this.connected4 == true && this.connected1 == true){
+        this.rot = 0;
+      }
+    }else if((this.connected1 == true && this.connected3 == true) || (this.connected2 == true && this.connected4 == true)){
+      this.shape = "l";
+      if(this.connected1 == true && this.connected3 == true){
+        this.rot = 0;
+      }else if(this.connected2 == true && this.connected4 == true){
+        this.rot = 90;
+      }
+    }else if((this.connected1 != true && this.connected2 != true && this.connected3 != true && this.connected4 == true) || (this.connected2 != true && this.connected3 != true && this.connected4 != true && this.connected1 == true) || (this.connected3 != true && this.connected4 != true && this.connected1 != true && this.connected2 == true) || (this.connected4 != true && this.connected1 != true && this.connected2 != true && this.connected3 == true)){
+      this.shape = "i";
+      if(this.connected1 != true && this.connected2 != true && this.connected3 != true && this.connected4 == true){
+        this.rot = 0;
+      }else if(this.connected2 != true && this.connected3 != true && this.connected4 != true && this.connected1 == true){
+        this.rot = 90;
+      }else if(this.connected3 != true && this.connected4 != true && this.connected1 != true && this.connected2 == true){
+        this.rot = 180;
+      }else if(this.connected4 != true && this.connected1 != true && this.connected2 != true && this.connected3 == true){
+        this.rot = 270;
+      }
+    }else if(this.connected1 == false && this.connected2 == false && this.connected3 == false && this.connected4 == false){
+      this.shape = "o"
+      this.rot = 0;
+    }
+  },
+  this.update = function(overide){
+    this.preShape == this.shape;
+    this.checkConnections();
+    if(this.preShape != this.shape){
+      this.name = this.id + " Connected side 1: " + this.connected1 + " Connected side 2: " + this.connected2 + " Connected side 3: " + this.connected3 + " Connected side 4: " + this.connected4  + " Shape: " + this.shape + " Rotation: " + this.rot;
+      this.imgUp();
+    }else if(overide == true){
+      this.name = this.id + " Connected side 1: " + this.connected1 + " Connected side 2: " + this.connected2 + " Connected side 3: " + this.connected3 + " Connected side 4: " + this.connected4  + " Shape: " + this.shape + " Rotation: " + this.rot;
+      this.imgUp();
+    }
+  }
+};
 //vars
 var i=0;
 var money=100;
-var gs=65;
-var gxs=10, gys=5;
+var gs=50;
+var gxs=100, gys=50;
 var ox=9, oy=59;
 var ocx=0, ocy=0;
 var x=0, y=0;
 var gwx=0, gwy=0;
 var o=0
 var cxs=gxs*gs, cys=gys*gs;
-var imgScale=gs/75;
+var imgScale=gs/100;
 var bx=0, by=0;
 var cx=0, cy=0;
 var plcRot=0;
@@ -549,6 +834,17 @@ function gameLoopS(){
   btn = "";
   for(i = 1; i <= 14; i++){
     btn = "buld" + i.toString();
+    if(selBuldOrder[i-1] == "conveyor"){
+      document.getElementById(btn).style.backgroundImage = "url('" + "assets/conveyor x.svg" + "')";
+    }else if(selBuldOrder[i-1] == "pipe"){
+      document.getElementById(btn).style.backgroundImage = "url('" + "assets/pipe x.svg" + "')";
+    }else if(selBuldOrder[i-1] == "mine"){
+      document.getElementById(btn).style.backgroundImage = "url('" + "assets/grey mine.svg" + "')";
+    }else if(selBuldOrder[i-1] == "pump"){
+      document.getElementById(btn).style.backgroundImage = "url('" + "assets/grey pump.svg" + "')";
+    }else{
+      document.getElementById(btn).style.backgroundImage = "url('" + "assets/" + selBuldOrder[i-1] + ".svg" + "')";
+    }
     if(buildingsUnlocked.includes(selBuldOrder[i-1]) == true || extractorsUnlocked.includes(selBuldOrder[i-1]) == true){
       document.getElementById(btn).style.color = "#ffffff";
     }else{
@@ -577,9 +873,9 @@ function gameLoopF(timeStamp){
   }
   if(hoveredNode == true){
     if(nodes[curBuld].type == "mine" && selObject == "mine"){
-      drawImage(extractorsUnlockedImgs[0],bx,by,imgScale,plcRot);  
+      drawImage(extractorsUnlockedImgs[0],bx,by,imgScale,plcRot);
     }else if(nodes[curBuld].type == "pump" && selObject == "pump"){
-      ctx.drawImage(extractorsUnlockedImgs[1],bx*gs,by*gs,gs,gs);  
+      drawImage(extractorsUnlockedImgs[1],bx,by,imgScale,plcRot);
     }
   }
   requestAnimationFrame(gameLoopF);
@@ -687,6 +983,13 @@ function mc() {
     let len = placedObjects.length;
     if(selObject == "conveyor"){
       placedObjects[len] = new Conveyor;
+      placedObjects[len].xLoc = bx;
+      placedObjects[len].yLoc = by;
+      placedObjects[len].sideSetup();
+      placedObjects[len].update(true);
+    }
+    if(selObject == "pipe"){
+      placedObjects[len] = new Pipe;
       placedObjects[len].xLoc = bx;
       placedObjects[len].yLoc = by;
       placedObjects[len].sideSetup();
@@ -855,6 +1158,39 @@ function generateWorld() {
     gwx = Math.floor(Math.random() * (gxs - 0) + 0);
     gwy = Math.floor(Math.random() * (gys - 0) + 0);
     nodes[len] = new Quarts();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+
+  for(i = 0; i < liquidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Water();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < liquidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Oil();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < liquidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Petroleum();
+    nodes[len].xLoc = gwx;
+    nodes[len].yLoc = gwy;
+  }
+  for(i = 0; i < liquidNodes; i++){
+    len = nodes.length;
+    gwx = Math.floor(Math.random() * (gxs - 0) + 0);
+    gwy = Math.floor(Math.random() * (gys - 0) + 0);
+    nodes[len] = new Nitrogen();
     nodes[len].xLoc = gwx;
     nodes[len].yLoc = gwy;
   }
